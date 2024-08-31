@@ -6,9 +6,12 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true
+			"recommended": true,
+			"correctness": {
+				"noUnusedImports": "error"
+			}
 		},
-		"ignore": ["test"]
+		"ignore": ["test", "src/contracts/*"]
 	},
 	"files": {
 		"include": [

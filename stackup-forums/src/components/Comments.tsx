@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";
 import type { CommentDetails, PostDetails } from "../types/posts/types";
-import ShareablePostComponent from "./ShareablePostComponent";
 import { useReadContract } from "wagmi";
 import { readContract } from "wagmi/actions";
 import config from "../wagmi";
-import VotePostStubs from "./VotePostStubs";
 import Link from "next/link";
 import VoteCommentStubs from "./VoteCommentStubs";
 

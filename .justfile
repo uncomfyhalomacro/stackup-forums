@@ -26,3 +26,6 @@ contract:
 check:
 	just foundry/check
 	just stackup-forums/lint
+
+fix:
+	just stackup-forums/fix

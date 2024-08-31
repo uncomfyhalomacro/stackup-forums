@@ -1,7 +1,7 @@
-import { useReadContract, useWriteContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import type { CommentDetails } from "../types/posts/types";
-import { FormEvent, useState } from "react";
-import { getAccount, writeContract } from "@wagmi/core";
+import { useState } from "react";
+import { getAccount } from "@wagmi/core";
 import config from "../wagmi";
 import type { Address } from "viem";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";

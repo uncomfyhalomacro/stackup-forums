@@ -14,3 +14,6 @@ format:
 
 lint:
 	yarn lint
+
+fix:
+	yarn fix

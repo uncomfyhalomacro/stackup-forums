@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
-import { useAccount, useReadContract } from "wagmi";
 import { ABI, deployedAddress } from "../../contracts/deployed-contract";
 import type { PostDetails } from "../../types/posts/types";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ShareablePostComponent from "../../components/ShareablePostComponent";
-import Comment from "../../components/CommentForm";
 import Comments from "../../components/Comments";
 import type { ParsedUrlQuery } from "node:querystring";
 import type { Address } from "viem";
