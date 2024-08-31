@@ -6,6 +6,9 @@ build: export-abi
 export-abi:
 	just foundry/export-abi
 
+dev:
+	just stackup-forums/dev
+	
 start:
 	just stackup-forums/build
 	just stackup-forums/start
