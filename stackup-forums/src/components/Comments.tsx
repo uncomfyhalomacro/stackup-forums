@@ -23,7 +23,11 @@ const ShareableCommentComponent = ({
 			</h2>
 			<h3>from `{comment.owner}`</h3>
 			<p>{comment.description}</p>
-			<VoteCommentStubs likes={comment.likes} key={comment.id} commentId={comment.id} />
+			<VoteCommentStubs
+				likes={comment.likes}
+				key={comment.id}
+				commentId={comment.id}
+			/>
 		</article>
 	);
 };
@@ -45,12 +49,12 @@ const Comments = ({ post }: { post: PostDetails }) => {
 		const fetchCommentsFromCommentIds = async () => {
 			const comments: CommentDetails[] = [];
 			const binding = postToCommentIds as bigint[];
-			for (let i = 0; i < Number(binding); ++i) {
+			for await (const commentId of binding) {
 				const comment: CommentDetails = (await readContract(config, {
 					abi: ABI,
 					address: deployedAddress,
 					functionName: "getComment",
-					args: [i],
+					args: [commentId],
 				})) as CommentDetails;
 
 				comments.push(comment);

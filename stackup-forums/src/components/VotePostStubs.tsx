@@ -1,10 +1,18 @@
 import config from "../wagmi";
 import { useState } from "react";
-import { simulateContract, writeContract, waitForTransactionReceipt, readContract } from "wagmi/actions";
+import {
+	simulateContract,
+	writeContract,
+	waitForTransactionReceipt,
+	readContract,
+} from "wagmi/actions";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
 import type { PostDetails } from "../types/posts/types";
 
-const VotePostStubs = ({ postId, likes }: { postId: bigint; likes: bigint }) => {
+const VotePostStubs = ({
+	postId,
+	likes,
+}: { postId: bigint; likes: bigint }) => {
 	const [likeCounter, setLikeCounter] = useState(likes);
 
 	const handleUpvote = async () => {

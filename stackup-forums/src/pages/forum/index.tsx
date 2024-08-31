@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 import Posts from "../../components/Posts";
 import type { PostDetails } from "../../types/posts/types";
+import PostForm from "../../components/PostForm";
 
 const Forum = () => {
 	const {
@@ -21,7 +22,8 @@ const Forum = () => {
 		const fetchPosts = async () => {
 			const posts: PostDetails[] = [];
 			const binding = postIdIncrement as bigint;
-			for (let i = 0; i < binding; ++i) {
+			// the first post was already initialised with 0x000000000
+			for (let i = 0; i < binding; i++) {
 				const post: PostDetails = (await readContract(config, {
 					abi: ABI,
 					address: deployedAddress,
@@ -41,6 +43,9 @@ const Forum = () => {
 
 	return (
 		<div>
+			<div>
+				<PostForm />
+			</div>
 			<section>
 				<Posts posts={posts} />
 			</section>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import VotePostStubs from "./VotePostStubs";
 import type { PostDetails } from "../types/posts/types";
 
-const ShareablePostComponent = ({ post } : {post:PostDetails}) => {
+const ShareablePostComponent = ({ post }: { post: PostDetails }) => {
 	return (
 		<article key={post.id}>
 			<Link href={`/posts/${encodeURIComponent(post.id.toString())}`}>
@@ -14,6 +14,5 @@ const ShareablePostComponent = ({ post } : {post:PostDetails}) => {
 		</article>
 	);
 };
-
 
 export default ShareablePostComponent;

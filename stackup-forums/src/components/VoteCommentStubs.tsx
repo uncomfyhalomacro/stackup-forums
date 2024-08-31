@@ -1,10 +1,18 @@
 import config from "../wagmi";
 import { useState } from "react";
-import { simulateContract, writeContract, waitForTransactionReceipt, readContract } from "wagmi/actions";
+import {
+	simulateContract,
+	writeContract,
+	waitForTransactionReceipt,
+	readContract,
+} from "wagmi/actions";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
 import type { CommentDetails } from "../types/posts/types";
 
-const VoteCommentStubs = ({ commentId, likes }: {commentId: bigint; likes: bigint }) => {
+const VoteCommentStubs = ({
+	commentId,
+	likes,
+}: { commentId: bigint; likes: bigint }) => {
 	const [likeCounter, setLikeCounter] = useState(likes);
 
 	const handleUpvote = async () => {
@@ -29,7 +37,9 @@ const VoteCommentStubs = ({ commentId, likes }: {commentId: bigint; likes: bigin
 		});
 
 		if (transaction.status === "reverted") {
-			alert("Upvoting Comment failed! Transaction was reverted due to an error!");
+			alert(
+				"Upvoting Comment failed! Transaction was reverted due to an error!",
+			);
 			return;
 		}
 

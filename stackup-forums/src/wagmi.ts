@@ -8,8 +8,7 @@ import {
 	polygon,
 	sepolia,
 } from "wagmi/chains";
-import {   cookieStorage,
-	createStorage} from 'wagmi';
+import { cookieStorage, createStorage } from "wagmi";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID as string;
 
@@ -17,7 +16,7 @@ const config = getDefaultConfig({
 	appName: "StackUp Forums",
 	projectId: projectId,
 	storage: createStorage({
-		storage: cookieStorage
+		storage: cookieStorage,
 	}),
 	chains: [
 		mainnet,
@@ -25,7 +24,9 @@ const config = getDefaultConfig({
 		optimism,
 		arbitrum,
 		base,
-		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true" ? [sepolia, arbitrumSepolia] : []),
+		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+			? [sepolia, arbitrumSepolia]
+			: []),
 	],
 	ssr: true,
 });

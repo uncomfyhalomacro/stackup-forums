@@ -1,0 +1,203 @@
+import type { PollFormDetails, PostDetails } from "../types/posts/types";
+import { type FormEvent, useState } from "react";
+import {
+	getAccount,
+	readContract,
+	simulateContract,
+	waitForTransactionReceipt,
+	writeContract,
+} from "@wagmi/core";
+import config from "../wagmi";
+import type { Address } from "viem";
+import { ABI, deployedAddress } from "../contracts/deployed-contract";
+import { redirect } from "next/navigation";
+
+const PostForm = () => {
+	const postInitialiser: PostDetails = {
+		id: BigInt(0),
+		title: "",
+		owner: getAccount(config).address as Address,
+		description: "",
+		spoiler: false,
+		likes: BigInt(0),
+		timestamp: BigInt(0),
+	};
+	const [post, setPost] = useState<PostDetails>(postInitialiser);
+	const [pollElementVisible, setPollElementVisible] = useState(true);
+	const [isLoading, setLoading] = useState(false);
+	const [isSuccess, setSuccess] = useState(false);
+
+	const pollInitialiser: PollFormDetails = {
+		question: "",
+		option1: "",
+		option2: "",
+	};
+	const [pollDetails, setPollDetails] =
+		useState<PollFormDetails>(pollInitialiser);
+
+	const handlePostCreation = async (e: FormEvent) => {
+		e.preventDefault();
+		setLoading(true);
+
+		const result = await simulateContract(config, {
+			abi: ABI,
+			address: deployedAddress,
+			functionName: "createPost",
+			args: [post.title, post.description, post.spoiler],
+		});
+		console.log(result);
+		const postTxHash = await writeContract(config, {
+			abi: ABI,
+			address: deployedAddress,
+			functionName: "createPost",
+			args: [post.title, post.description, post.spoiler],
+		});
+
+		const transaction = await waitForTransactionReceipt(config, {
+			hash: postTxHash,
+		});
+
+		if (transaction.status === "reverted") {
+			alert("Creating post failed! Transaction was reverted due to an error!");
+			return redirect(".");
+		}
+
+		const readUserPosts: bigint[] = (await readContract(config, {
+			abi: ABI,
+			address: deployedAddress,
+			functionName: "getPostsFromAddress",
+			args: [getAccount(config).address],
+		})) as bigint[];
+
+		// this won't affect the contract anyway
+		const latestPostId = readUserPosts.pop();
+
+		if (pollElementVisible) {
+			alert(
+				"You created a poll. You have to sign another transaction again 🙏",
+			);
+			const result = await simulateContract(config, {
+				abi: ABI,
+				address: deployedAddress,
+				functionName: "createPoll",
+				args: [
+					latestPostId,
+					pollDetails.question,
+					pollDetails.option1,
+					pollDetails.option2,
+				],
+			});
+
+			const pollTxHash = await writeContract(config, {
+				abi: ABI,
+				address: deployedAddress,
+				functionName: "createPoll",
+				args: [
+					latestPostId,
+					pollDetails.question,
+					pollDetails.option1,
+					pollDetails.option2,
+				],
+			});
+
+			const transaction = await waitForTransactionReceipt(config, {
+				hash: pollTxHash,
+			});
+
+			if (transaction.status === "reverted") {
+				alert(
+					"Creating poll failed! Transaction was reverted due to an error!",
+				);
+				return redirect(".");
+			}
+
+			console.log(result);
+			setLoading(false);
+			setSuccess(true);
+			alert("Successfully submitted!");
+			window.location.reload();
+		}
+	};
+
+	return (
+		<div>
+			<form
+				onSubmit={(e) => {
+					handlePostCreation(e);
+				}}
+			>
+				<h1>Post something wonderful!</h1>
+				<input
+					type="text"
+					name="post-title"
+					placeholder="Post title"
+					onChange={(e) => setPost({ ...post, title: e.target.value })}
+					required
+				/>
+				<textarea
+					rows={5}
+					name="post-description"
+					placeholder="What's on your mind?"
+					onChange={(e) => setPost({ ...post, description: e.target.value })}
+				/>
+				<label htmlFor="spoiler">
+					Spoil or not to spoil
+					<input
+						onChange={(e) =>
+							setPost({ ...post, spoiler: e.target.value === "on" })
+						}
+						type="checkbox"
+						name="post-spoiler"
+						defaultChecked
+					/>
+				</label>
+				<label htmlFor="hasPoll">
+					Create a poll:
+					<input
+						onClick={() => setPollElementVisible(!pollElementVisible)}
+						type="checkbox"
+						name="hasPoll"
+						defaultChecked
+					/>
+				</label>
+				{pollElementVisible && (
+					<>
+						<input
+							type="text"
+							name="poll-description"
+							placeholder="What's the poll about?"
+							onChange={(e) =>
+								setPollDetails({ ...pollDetails, question: e.target.value })
+							}
+							required
+						/>
+						<input
+							type="text"
+							name="poll-option1"
+							placeholder="Option 1 Description"
+							onChange={(e) =>
+								setPollDetails({ ...pollDetails, option1: e.target.value })
+							}
+							required
+						/>
+						<input
+							type="text"
+							name="poll-option2"
+							placeholder="Option 1 Description"
+							onChange={(e) =>
+								setPollDetails({ ...pollDetails, option2: e.target.value })
+							}
+							required
+						/>
+					</>
+				)}
+				<button type="submit">
+					{isLoading ? "Submitting..." : "Submit post"}
+				</button>
+				{isSuccess && <p>Successfully submitted</p>}
+			</form>
+		</div>
+	);
+};
+
+export default PostForm;

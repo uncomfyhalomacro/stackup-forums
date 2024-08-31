@@ -4,16 +4,17 @@ import { ABI, deployedAddress } from "../../contracts/deployed-contract";
 import type { PostDetails } from "../../types/posts/types";
 import { Suspense, useEffect, useState } from "react";
 import ShareablePostComponent from "../../components/ShareablePostComponent";
-import Comment from "../../components/Comment";
+import Comment from "../../components/CommentForm";
 import Comments from "../../components/Comments";
 import type { ParsedUrlQuery } from "node:querystring";
 import type { Address } from "viem";
 import { getAccount, readContract } from "@wagmi/core";
 import config from "../../wagmi";
 import Link from "next/link";
+import CommentForm from "../../components/CommentForm";
 
 export interface PostIdParams extends ParsedUrlQuery {
-	id: string;
+	id?: string;
 }
 
 export default function Post() {
@@ -49,11 +50,16 @@ export default function Post() {
 
 	return (
 		<>
-			<ShareablePostComponent post={postDetails} />
-			<Link href="/forum">Go back to forum.</Link>
-			<section title="comments-section">
-					<Comments post={postDetails} />
-			</section>
+			{postId !== undefined && (
+				<>
+					<ShareablePostComponent post={postDetails} />
+					<CommentForm postId={postDetails.id} />
+					<Link href="/forum">Go back to forum.</Link>
+					<section title="comments-section">
+						<Comments post={postDetails} />
+					</section>
+				</>
+			)}
 		</>
 	);
 }
