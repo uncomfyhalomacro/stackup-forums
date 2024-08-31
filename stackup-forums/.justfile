@@ -11,3 +11,6 @@ start:
 
 format:
 	yarn format
+
+lint:
+	yarn lint

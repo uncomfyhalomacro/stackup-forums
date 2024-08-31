@@ -4,7 +4,10 @@ set dotenv-load := true
 
 all: format compile deploy-and-verify
 
-compile:
+clean:
+	forge clean
+
+compile: clean
 	forge compile
 
 deploy-and-verify: export-abi
@@ -17,3 +20,6 @@ format:
 	forge fmt script
 	forge fmt src 
 	forge fmt test
+
+check: compile
+	forge coverage

@@ -22,3 +22,7 @@ deploy-contract:
 
 contract:
 	just foundry/all
+
+check:
+	just foundry/check
+	just stackup-forums/lint
