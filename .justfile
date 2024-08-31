@@ -1,0 +1,21 @@
+#!/usr/bin/just
+
+build: export-abi
+	just stackup-forums/build
+
+export-abi:
+	just foundry/export-abi
+
+start:
+	just stackup-forums/build
+	just stackup-forums/start
+
+format:
+	just foundry/format
+	just stackup-forums/format
+
+deploy-contract:
+	just foundry/deploy-and-verify
+
+contract:
+	just foundry/all
