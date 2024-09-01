@@ -183,7 +183,7 @@ const PostForm = () => {
 						<input
 							type="text"
 							name="poll-option2"
-							placeholder="Option 1 Description"
+							placeholder="Option 2 Description"
 							onChange={(e) =>
 								setPollDetails({ ...pollDetails, option2: e.target.value })
 							}

@@ -10,6 +10,7 @@ import { getAccount, readContract } from "@wagmi/core";
 import config from "../../wagmi";
 import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
+import Poll from "../../components/Poll";
 
 export interface PostIdParams extends ParsedUrlQuery {
 	id?: string;
@@ -51,6 +52,7 @@ export default function Post() {
 			{postId !== undefined && (
 				<>
 					<ShareablePostComponent post={postDetails} />
+					<Poll postId={postDetails.id} />
 					<CommentForm postId={postDetails.id} />
 					<Link href="/forum">Go back to forum.</Link>
 					<section title="comments-section">
