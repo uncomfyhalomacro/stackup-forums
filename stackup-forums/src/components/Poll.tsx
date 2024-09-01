@@ -42,11 +42,12 @@ const Poll = ({ postId }: { postId: bigint }) => {
 
 	return (
 		<div>
-			{poll && (
+			{/* The trick is to use "?" to check if there is a value. I get tripped by this a lot!  */}
+			{pollDetails?.id && (
 				<>
 					<h1>Poll: {pollDetails?.question}</h1>
-					{isSuccess1 && <h2>Successfully voted on {pollDetails?.option1}</h2>}
-					{isSuccess2 && <h2>Successfully voted on {pollDetails?.option2}</h2>}
+					{isSuccess1 && <h2>Successfully voted on {pollDetails.option1}</h2>}
+					{isSuccess2 && <h2>Successfully voted on {pollDetails.option2}</h2>}
 					<button
 						type="button"
 						onClick={() => {

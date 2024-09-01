@@ -43,9 +43,9 @@ const PostForm = () => {
 		// Block if poll first is visible but one or more details are empty
 		if (pollElementVisible) {
 			if (
-				!pollDetails.question.trim() ||
-				!pollDetails.option1.trim() ||
-				!pollDetails.option2.trim()
+				!pollDetails.question?.trim() ||
+				!pollDetails.option1?.trim() ||
+				!pollDetails.option2?.trim()
 			) {
 				alert(
 					"One or more of your poll details are empty. Consider checking your inputs.",
