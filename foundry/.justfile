@@ -10,6 +10,9 @@ clean:
 compile: clean
 	forge compile
 
+local-deploy:
+	forge script script/LocalDeployer.s.sol:LocalForumDeployerScript --rpc-url localhost --broadcast -vvv 
+
 deploy-and-verify: export-abi
 	forge script --chain arbitrum-sepolia script/Forum.s.sol:ForumDeployerScript --rpc-url arbitrum-sepolia --broadcast --etherscan-api-key "${ARBISCAN_API_KEY}" --verifier-url "${VERIFIER_URL}" --verify  -vvvv
 
