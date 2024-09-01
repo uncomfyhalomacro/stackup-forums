@@ -28,12 +28,16 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 		if (isError) {
 			alert("Failed to comment on post");
 		}
-	})
+	});
 
 	return (
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
+				if (comment.title.trim() === "" || comment.description === "") {
+					alert("Empty title or description not allowed.");
+					return;
+				}
 				writeContract({
 					abi: ABI,
 					address: deployedAddress,

@@ -40,18 +40,25 @@ const PostForm = () => {
 	const handlePostCreation = async (e: FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
-		// Block if poll is visible but one or more details are empty
+		// Block if poll first is visible but one or more details are empty
 		if (pollElementVisible) {
 			if (
-				!pollDetails.question ||
-				!pollDetails.option1 ||
-				!pollDetails.option2
+				!pollDetails.question.trim() ||
+				!pollDetails.option1.trim() ||
+				!pollDetails.option2.trim()
 			) {
 				alert(
 					"One or more of your poll details are empty. Consider checking your inputs.",
 				);
+				setLoading(false);
 				return;
 			}
+		}
+		// Block post submission if either post title or description is empty
+		if (!post.description.trim() || !post.title.trim()) {
+			alert("Title and description not allowed to be empty...");
+			setLoading(false);
+			return;
 		}
 
 		const result = await simulateContract(config, {
