@@ -13,6 +13,8 @@ import { ABI, deployedAddress } from "../contracts/deployed-contract";
 import { redirect } from "next/navigation";
 
 const PostForm = () => {
+	// Add a blocker here if inputs are empty
+
 	const postInitialiser: PostDetails = {
 		id: BigInt(0),
 		title: "",
@@ -23,7 +25,7 @@ const PostForm = () => {
 		timestamp: BigInt(0),
 	};
 	const [post, setPost] = useState<PostDetails>(postInitialiser);
-	const [pollElementVisible, setPollElementVisible] = useState(true);
+	const [pollElementVisible, setPollElementVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
 	const [isSuccess, setSuccess] = useState(false);
 
@@ -38,6 +40,19 @@ const PostForm = () => {
 	const handlePostCreation = async (e: FormEvent) => {
 		e.preventDefault();
 		setLoading(true);
+		// Block if poll is visible but one or more details are empty
+		if (pollElementVisible) {
+			if (
+				!pollDetails.question ||
+				!pollDetails.option1 ||
+				!pollDetails.option2
+			) {
+				alert(
+					"One or more of your poll details are empty. Consider checking your inputs.",
+				);
+				return;
+			}
+		}
 
 		const result = await simulateContract(config, {
 			abi: ABI,
@@ -110,13 +125,12 @@ const PostForm = () => {
 				);
 				return redirect(".");
 			}
-
-			console.log(result);
-			setLoading(false);
-			setSuccess(true);
-			alert("Successfully submitted!");
-			window.location.reload();
 		}
+		console.log(result);
+		setLoading(false);
+		setSuccess(true);
+		alert("Successfully submitted!");
+		window.location.reload();
 	};
 
 	return (
@@ -130,6 +144,7 @@ const PostForm = () => {
 				<input
 					type="text"
 					name="post-title"
+					value={post.title}
 					placeholder="Post title"
 					onChange={(e) => setPost({ ...post, title: e.target.value })}
 					required
@@ -138,6 +153,7 @@ const PostForm = () => {
 					rows={5}
 					name="post-description"
 					placeholder="What's on your mind?"
+					value={post.description}
 					onChange={(e) => setPost({ ...post, description: e.target.value })}
 				/>
 				<label htmlFor="spoiler">
@@ -148,7 +164,7 @@ const PostForm = () => {
 						}
 						type="checkbox"
 						name="post-spoiler"
-						defaultChecked
+						defaultChecked={false}
 					/>
 				</label>
 				<label htmlFor="hasPoll">
@@ -157,15 +173,16 @@ const PostForm = () => {
 						onClick={() => setPollElementVisible(!pollElementVisible)}
 						type="checkbox"
 						name="hasPoll"
-						defaultChecked
+						defaultChecked={false}
 					/>
 				</label>
 				{pollElementVisible && (
 					<>
 						<input
 							type="text"
-							name="poll-description"
+							name="poll-question"
 							placeholder="What's the poll about?"
+							value={pollDetails.question}
 							onChange={(e) =>
 								setPollDetails({ ...pollDetails, question: e.target.value })
 							}
@@ -175,6 +192,7 @@ const PostForm = () => {
 							type="text"
 							name="poll-option1"
 							placeholder="Option 1 Description"
+							value={pollDetails.option1}
 							onChange={(e) =>
 								setPollDetails({ ...pollDetails, option1: e.target.value })
 							}
@@ -184,6 +202,7 @@ const PostForm = () => {
 							type="text"
 							name="poll-option2"
 							placeholder="Option 2 Description"
+							value={pollDetails.option2}
 							onChange={(e) =>
 								setPollDetails({ ...pollDetails, option2: e.target.value })
 							}

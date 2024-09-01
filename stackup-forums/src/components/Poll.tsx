@@ -16,17 +16,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 		},
 	);
 
-	const pollInitialiser: PollAllDetails = {
-		id: BigInt(0),
-		question: "",
-		option1: "",
-		option2: "",
-		option1Counter: BigInt(0),
-		option2Counter: BigInt(0),
-	};
-
-	const [pollDetails, setPollDetails] =
-		useState<PollAllDetails>(pollInitialiser);
+	const [pollDetails, setPollDetails] = useState<PollAllDetails | undefined>();
 
 	const {
 		writeContract: votingOption1,
@@ -41,7 +31,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 
 	useEffect(() => {
 		if (!isLoading) {
-			const binding = poll as PollAllDetails;
+			const binding = poll;
 			setPollDetails(binding);
 		}
 		if (isSuccess1 || isSuccess2) {
@@ -52,7 +42,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 
 	return (
 		<div>
-			{pollDetails !== undefined && (
+			{poll === undefined && (
 				<>
 					<h1>Poll: {pollDetails?.question}</h1>
 					{isSuccess1 && <h2>Successfully voted on {pollDetails?.option1}</h2>}

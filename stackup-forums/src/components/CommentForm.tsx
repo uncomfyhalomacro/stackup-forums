@@ -1,12 +1,14 @@
 import { useWriteContract } from "wagmi";
 import type { CommentDetails } from "../types/posts/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getAccount } from "@wagmi/core";
 import config from "../wagmi";
 import type { Address } from "viem";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";
 
 const CommentForm = ({ postId }: { postId: bigint }) => {
+	// This is okay for now??? I don't like that we have an initialiser
+	// TODO: investigate if our field should also be optional nullable types.
 	const initialiser: CommentDetails = {
 		id: BigInt(0),
 		title: "",
@@ -17,7 +19,16 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 		timestamp: BigInt(0),
 	};
 	const [comment, setComment] = useState<CommentDetails>(initialiser);
-	const { writeContract, isPending, isSuccess } = useWriteContract();
+	const { writeContract, isPending, isSuccess, isError } = useWriteContract();
+
+	useEffect(() => {
+		if (isSuccess) {
+			alert("Successfully commented on post");
+		}
+		if (isError) {
+			alert("Failed to comment on post");
+		}
+	})
 
 	return (
 		<form
@@ -55,13 +66,14 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 					}
 					type="checkbox"
 					name="comment-spoiler"
-					defaultChecked
+					defaultChecked={false}
 				/>
 			</label>
 			<button type="submit">
 				{isPending ? "Submitting..." : "Submit comment"}
 			</button>
-			{isSuccess && <p>Successfully submitted</p>}
+			{isSuccess && <p>Successfully commented</p>}
+			{isError && <p>Failed to comment on post</p>}
 		</form>
 	);
 };
