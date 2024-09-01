@@ -24,9 +24,11 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 	useEffect(() => {
 		if (isSuccess) {
 			alert("Successfully commented on post");
+			window.location.reload();
 		}
 		if (isError) {
 			alert("Failed to comment on post");
+			window.location.reload();
 		}
 	});
 
@@ -34,7 +36,7 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 		<form
 			onSubmit={(e) => {
 				e.preventDefault();
-				if (comment.title.trim() === "" || comment.description === "") {
+				if (!comment.title.trim() || !comment.description.trim()) {
 					alert("Empty title or description not allowed.");
 					return;
 				}

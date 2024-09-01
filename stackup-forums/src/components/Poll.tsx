@@ -42,7 +42,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 
 	return (
 		<div>
-			{poll === undefined && (
+			{poll && (
 				<>
 					<h1>Poll: {pollDetails?.question}</h1>
 					{isSuccess1 && <h2>Successfully voted on {pollDetails?.option1}</h2>}
