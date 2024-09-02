@@ -13,6 +13,7 @@ import {
 	faLongArrowDown,
 	faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
+import styles from "../styles/Custom.module.css";
 
 const CommonVoteStubs = ({
 	id,
@@ -113,9 +114,7 @@ const CommonVoteStubs = ({
 	return (
 		<>
 			<div
-				style={{
-					display: "inline-block",
-				}}
+				className={styles.vote}
 			>
 				<button type="button" onClick={handleUpvote}>
 					<FontAwesomeIcon icon={faLongArrowUp} /> {likeCounter.toString()}

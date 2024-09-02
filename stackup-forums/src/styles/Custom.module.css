@@ -3,7 +3,7 @@
 	padding: 1rem;
 	text-align: left;
 	text-wrap: pretty;
-	word-break: break-all;
+	word-break: normal;
 	background: -moz-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
 background: -webkit-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
 background: linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
@@ -19,13 +19,32 @@ background: linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, 
 	padding: 1rem;
 	text-align: left;
 	text-wrap: pretty;
-	word-break: break-all;
+	word-break: normal;
 	background-color: #8d8d8d;
 	color: #FFFFFFdd;
 	text-decoration: none;
 	border-radius: 10px;
 	transition: color 0.15s ease, border-color 0.15s ease;
 	width: 80vw;
+}
+
+.vote {
+	display: inline-block;
+}
+
+.vote button {
+	font-family: Gilroy;
+	margin-right: 0.5rem;
+	max-width: 300px;
+	height: 2rem;
+	padding: 5px 10px;
+	font-size: 1rem;
+	border-radius: 10px;
+	border-style: none;
+}
+
+.vote button:hover{
+	box-shadow: rgb(181, 89, 243) 0 0 5px 2px;
 }
 
 
