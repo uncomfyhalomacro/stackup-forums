@@ -52,9 +52,7 @@ const CommonVoteStubs = ({
 		});
 
 		if (transaction.status === "reverted") {
-			alert(
-				"Upvoting failed! Transaction was reverted due to an error!",
-			);
+			alert("Upvoting failed! Transaction was reverted due to an error!");
 			return;
 		}
 
@@ -93,9 +91,7 @@ const CommonVoteStubs = ({
 		});
 
 		if (transaction.status === "reverted") {
-			alert(
-				"Downvoting failed! Transaction was reverted due to an error!",
-			);
+			alert("Downvoting failed! Transaction was reverted due to an error!");
 			return;
 		}
 
@@ -113,9 +109,7 @@ const CommonVoteStubs = ({
 	};
 	return (
 		<>
-			<div
-				className={styles.vote}
-			>
+			<div className={styles.vote}>
 				<button type="button" onClick={handleUpvote}>
 					<FontAwesomeIcon icon={faLongArrowUp} /> {likeCounter.toString()}
 				</button>

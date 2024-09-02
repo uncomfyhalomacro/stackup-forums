@@ -139,7 +139,7 @@ const PostForm = () => {
 				alert(
 					"Creating poll failed! Transaction was reverted due to an error!",
 				);
-				return redirect(".");
+				return;
 			}
 		}
 		console.log(result);
