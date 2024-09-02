@@ -52,7 +52,7 @@ const CommonVoteStubs = ({
 
 		if (transaction.status === "reverted") {
 			alert(
-				"Upvoting Comment failed! Transaction was reverted due to an error!",
+				"Upvoting failed! Transaction was reverted due to an error!",
 			);
 			return;
 		}
@@ -93,7 +93,7 @@ const CommonVoteStubs = ({
 
 		if (transaction.status === "reverted") {
 			alert(
-				"Downvoting Comment failed! Transaction was reverted due to an error!",
+				"Downvoting failed! Transaction was reverted due to an error!",
 			);
 			return;
 		}
