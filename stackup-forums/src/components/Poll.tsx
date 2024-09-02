@@ -29,6 +29,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 		isSuccess: isSuccess2,
 	} = useWriteContract();
 
+
 	useEffect(() => {
 		if (!isLoading) {
 			const binding = poll;

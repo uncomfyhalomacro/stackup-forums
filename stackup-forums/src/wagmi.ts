@@ -4,6 +4,7 @@ import {
 	arbitrum,
 	arbitrumSepolia,
 	base,
+	hardhat,
 	mainnet,
 	optimism,
 	polygon,
@@ -35,7 +36,7 @@ const config = getDefaultConfig({
 	storage: createStorage({
 		storage: cookieStorage,
 	}),
-	chains: [
+	chains: process.env.NEXT_PUBLIC_ONLY_ANVIL_HARDHAT_TESTNETS === "true" ? [anvil, hardhat] : [
 		mainnet,
 		polygon,
 		optimism,
@@ -43,8 +44,7 @@ const config = getDefaultConfig({
 		base,
 		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
 			? [sepolia, arbitrumSepolia, anvil]
-			: []),
-	],
+			: [])],
 	ssr: true,
 });
 

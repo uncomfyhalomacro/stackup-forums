@@ -49,16 +49,16 @@ contract Forum {
     mapping(uint256 => uint256) public postToPoll; // assign postId -> pollId
 
     mapping(uint256 => uint256[]) private postToComments; // assign postId -> commentId[]
-	
-	// NOTE: These features can be used as reference for Bounty (?).
-	// CHALLENGE(?): They can only downvote if it's upvoted. and downvote if it's not.
-	// TODO: Disable voting again for both polls and posts and comments
-	mapping(address => uint256[]) public userVotedPosts; // each ID will be assigned to the user associated with post
 
-	// TODO: Disable voting again for both polls and posts and comments
+    // NOTE: These features can be used as reference for Bounty (?).
+    // CHALLENGE(?): They can only downvote if it's upvoted. and downvote if it's not.
+    // TODO: Disable voting again for both polls and posts and comments
+    mapping(address => uint256[]) public userVotedPosts; // each ID will be assigned to the user associated with post
+
+    // TODO: Disable voting again for both polls and posts and comments
     mapping(address => uint256[]) public userVotedComments; // assign address to a list of commentIds
 
-	// TODO: Disable voting again for both polls and posts and comments
+    // TODO: Disable voting again for both polls and posts and comments
     mapping(address => uint256[]) public userPolls; // assign also address to a list of pollIds
 
     event PostSubmitted(address indexed userAddress, Post post);

@@ -53,6 +53,13 @@ const PostForm = () => {
 				setLoading(false);
 				return;
 			}
+			if (pollDetails.option1.trim() === pollDetails.option2.trim()) {
+				alert(
+					"Option 1 and 2 are the same. Consider checking your inputs.",
+				);
+				setLoading(false);
+				return;
+			}
 		}
 		// Block post submission if either post title or description is empty
 		if (!post.description.trim() || !post.title.trim()) {
@@ -104,9 +111,9 @@ const PostForm = () => {
 				functionName: "createPoll",
 				args: [
 					latestPostId,
-					pollDetails.question,
-					pollDetails.option1,
-					pollDetails.option2,
+					pollDetails.question.trim(),
+					pollDetails.option1.trim(),
+					pollDetails.option2.trim(),
 				],
 			});
 
@@ -116,9 +123,9 @@ const PostForm = () => {
 				functionName: "createPoll",
 				args: [
 					latestPostId,
-					pollDetails.question,
-					pollDetails.option1,
-					pollDetails.option2,
+					pollDetails.question.trim(),
+					pollDetails.option1.trim(),
+					pollDetails.option2.trim(),
 				],
 			});
 
