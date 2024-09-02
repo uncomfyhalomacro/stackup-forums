@@ -65,7 +65,7 @@ const PostForm = () => {
 		}
 		// Block post submission if either post title or description is empty
 		if (!post.description.trim() || !post.title.trim()) {
-			alert("Title and description not allowed to be empty...");
+			alert("Title or description not allowed to be empty...");
 			setLoading(false);
 			return;
 		}

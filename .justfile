@@ -13,7 +13,7 @@ start:
 	just stackup-forums/build
 	just stackup-forums/start
 
-format:
+format: check fix
 	just foundry/format
 	just stackup-forums/format
 

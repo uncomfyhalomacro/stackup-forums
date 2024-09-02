@@ -55,6 +55,7 @@ export default function Post() {
 					<ShareablePostComponent post={postDetails} />
 					<Poll postId={postDetails.id} />
 					<CommentForm postId={postDetails.id} />
+					<h3>⇓⇓⇓ Comments ⇓⇓⇓</h3>
 					<Comments post={postDetails} />
 				</div>
 			)}

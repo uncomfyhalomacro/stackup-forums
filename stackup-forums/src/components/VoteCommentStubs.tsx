@@ -8,7 +8,6 @@ import {
 } from "wagmi/actions";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
 import type { CommentDetails } from "../types/posts/types";
-import styles from "../styles/Custom.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faLongArrowDown,

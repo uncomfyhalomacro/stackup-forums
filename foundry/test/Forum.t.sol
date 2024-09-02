@@ -19,24 +19,24 @@ contract ForumTest is Test {
     }
 
     function testCreatePoll() public {
-        forum.createPoll(0, "Is StackUp The Best?", "Yes", "No");
-        Forum.Poll memory _poll = forum.getPollFromPost(0);
+        forum.createPoll(1, "Is StackUp The Best?", "Yes", "No");
+        Forum.Poll memory _poll = forum.getPollFromPost(1);
         assertEq(_poll.question, "Is StackUp The Best?");
     }
 
     function testGetPost() public view {
-        Forum.Post memory _post = forum.getPost(0);
+        Forum.Post memory _post = forum.getPost(1);
         assertEq(_post.title, "StackUp");
         assertEq(_post.description, "Empowering Developers at Scale!");
         assertEq(_post.spoil, false);
     }
 
     function testVotePost() public {
-        forum.upVotePost(0);
-        Forum.Post memory _post = forum.getPost(0);
+        forum.upVotePost(1);
+        Forum.Post memory _post = forum.getPost(1);
         assertEq(_post.likes, 1);
-        forum.downVotePost(0);
-        _post = forum.getPost(0);
+        forum.downVotePost(1);
+        _post = forum.getPost(1);
         assertEq(_post.likes, 0);
     }
 }
