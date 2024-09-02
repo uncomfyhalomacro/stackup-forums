@@ -11,6 +11,10 @@ import config from "../wagmi";
 import type { Address } from "viem";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";
 import { redirect } from "next/navigation";
+import styles from "../styles/Custom.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil, faPoll, faWarning } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
 
 const PostForm = () => {
 	// Add a blocker here if inputs are empty
@@ -54,9 +58,7 @@ const PostForm = () => {
 				return;
 			}
 			if (pollDetails.option1.trim() === pollDetails.option2.trim()) {
-				alert(
-					"Option 1 and 2 are the same. Consider checking your inputs.",
-				);
+				alert("Option 1 and 2 are the same. Consider checking your inputs.");
 				setLoading(false);
 				return;
 			}
@@ -101,7 +103,7 @@ const PostForm = () => {
 		// this won't affect the contract anyway
 		const latestPostId = readUserPosts.pop();
 
-		if (pollElementVisible) {
+		if (pollElementVisible && latestPostId !== undefined) {
 			alert(
 				"You created a poll. You have to sign another transaction again 🙏",
 			);
@@ -148,13 +150,19 @@ const PostForm = () => {
 	};
 
 	return (
-		<div>
+		<div className={styles.cardPlain}>
+			<div className={styles.home}>
+				<h3>
+					<Link href="/">Go back to main page</Link>{" "}
+					<Link href={"/comments"}>See all comments</Link>
+				</h3>
+			</div>
 			<form
+				className={styles.form}
 				onSubmit={(e) => {
 					handlePostCreation(e);
 				}}
 			>
-				<h1>Post something wonderful!</h1>
 				<input
 					type="text"
 					name="post-title"
@@ -170,26 +178,6 @@ const PostForm = () => {
 					value={post.description}
 					onChange={(e) => setPost({ ...post, description: e.target.value })}
 				/>
-				<label htmlFor="spoiler">
-					Spoil or not to spoil
-					<input
-						onChange={(e) =>
-							setPost({ ...post, spoiler: e.target.value === "on" })
-						}
-						type="checkbox"
-						name="post-spoiler"
-						defaultChecked={false}
-					/>
-				</label>
-				<label htmlFor="hasPoll">
-					Create a poll:
-					<input
-						onClick={() => setPollElementVisible(!pollElementVisible)}
-						type="checkbox"
-						name="hasPoll"
-						defaultChecked={false}
-					/>
-				</label>
 				{pollElementVisible && (
 					<>
 						<input
@@ -224,9 +212,42 @@ const PostForm = () => {
 						/>
 					</>
 				)}
-				<button type="submit">
-					{isLoading ? "Submitting..." : "Submit post"}
-				</button>
+				<div className={styles.bottomPrimary}>
+					<div className={styles.secondary}>
+						<label htmlFor="spoiler">
+							<button
+								type="button"
+								onClick={() => setPost({ ...post, spoiler: !post.spoiler })}
+							>
+								<FontAwesomeIcon
+									icon={faWarning}
+									color={!post.spoiler ? "#359AECff" : "#FF5D64ff"}
+								/>{" "}
+								Spoiler
+							</button>
+						</label>
+						<label htmlFor="hasPoll">
+							<button
+								type="button"
+								onClick={() => setPollElementVisible(!pollElementVisible)}
+							>
+								<FontAwesomeIcon
+									icon={faPoll}
+									color={!pollElementVisible ? "#359AECff" : "#FF5D64ff"}
+								/>{" "}
+								Poll
+							</button>
+						</label>
+
+						<button type="submit" className={styles.submit}>
+							<FontAwesomeIcon
+								icon={faPencil}
+								color={!isLoading ? "#359AECff" : "#FF5D64ff"}
+							/>{" "}
+							{isLoading ? "Submitting..." : "Submit post"}
+						</button>
+					</div>
+				</div>
 				{isSuccess && <p>Successfully submitted</p>}
 			</form>
 		</div>

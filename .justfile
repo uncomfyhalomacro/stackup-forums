@@ -29,3 +29,8 @@ check:
 
 fix:
 	just stackup-forums/fix
+
+_local-setup:
+	just foundry/local-setup
+
+local-setup: _local-setup dev

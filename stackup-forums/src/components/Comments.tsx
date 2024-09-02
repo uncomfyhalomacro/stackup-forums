@@ -6,20 +6,21 @@ import { readContract } from "wagmi/actions";
 import config from "../wagmi";
 import Link from "next/link";
 import VoteCommentStubs from "./VoteCommentStubs";
+import styles from "../styles/Custom.module.css";
 
 const ShareableCommentComponent = ({
 	comment,
 	post,
 }: { comment: CommentDetails; post: PostDetails }) => {
 	return (
-		<article key={comment.id}>
+		<article key={comment.id} className={styles.cardPlain}>
 			<h2>
 				{comment.title} on{" "}
-				<Link href={`/posts/${encodeURIComponent(post.id.toString())}`}>
-					{post.title}
-				</Link>
+				<Link href={`/posts/${post.id.toString()}`}>{post.title}</Link>
 			</h2>
-			<h3>from `{comment.owner}`</h3>
+			<h3>
+				from <span className={styles.address}>{comment.owner}</span>
+			</h3>
 			<p>{comment.description}</p>
 			<VoteCommentStubs
 				likes={comment.likes}
@@ -38,12 +39,15 @@ const Comments = ({ post }: { post: PostDetails }) => {
 		abi: ABI,
 		address: deployedAddress,
 		functionName: "getCommentsFromPost",
-		args: [post.id],
+		args: [Number(post.id)],
 	});
 
 	const [comments, setComments] = useState<CommentDetails[]>([]);
 
 	useEffect(() => {
+		if (!postToCommentIds) {
+			return;
+		}
 		const fetchCommentsFromCommentIds = async () => {
 			const comments: CommentDetails[] = [];
 			const binding = postToCommentIds as bigint[];
@@ -67,7 +71,7 @@ const Comments = ({ post }: { post: PostDetails }) => {
 
 	return (
 		<>
-			{comments.map((comment) => (
+			{comments?.map((comment) => (
 				<ShareableCommentComponent
 					comment={comment}
 					post={post}

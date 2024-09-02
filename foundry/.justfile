@@ -26,3 +26,8 @@ format:
 
 check: compile
 	forge coverage
+
+anvil:
+	anvil &
+
+local-setup: anvil local-deploy

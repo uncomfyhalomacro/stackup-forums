@@ -6,7 +6,7 @@ dev:
 build:
 	yarn build
 
-start:
+start: lint build
 	yarn start
 
 format:

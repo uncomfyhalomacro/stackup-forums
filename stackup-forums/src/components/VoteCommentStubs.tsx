@@ -8,6 +8,12 @@ import {
 } from "wagmi/actions";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
 import type { CommentDetails } from "../types/posts/types";
+import styles from "../styles/Custom.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faLongArrowDown,
+	faLongArrowUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 const VoteCommentStubs = ({
 	commentId,
@@ -98,12 +104,11 @@ const VoteCommentStubs = ({
 					display: "inline-block",
 				}}
 			>
-				Number of upvotes {likeCounter.toString()}{" "}
 				<button type="button" onClick={handleUpvote}>
-					⏫
+					<FontAwesomeIcon icon={faLongArrowUp} /> {likeCounter.toString()}
 				</button>
 				<button type="button" onClick={handleDownVote}>
-					⏬
+					<FontAwesomeIcon icon={faLongArrowDown} />
 				</button>
 			</div>
 		</>

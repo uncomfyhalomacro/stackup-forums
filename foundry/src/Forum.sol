@@ -34,9 +34,9 @@ contract Forum {
 
     // Rule 1: a user can own multiple posts. so each of the
     // users are mapped to a list of posts that they made
-    uint256 public postIdIncrement;
-    uint256 public pollIdIncrement;
-    uint256 public commentIdIncrement;
+    uint256 public postIdIncrement = 1;
+    uint256 public pollIdIncrement = 1;
+    uint256 public commentIdIncrement = 1;
 
     mapping(address => uint256[]) private userPosts; // each ID will be assigned to the user associated with post
 

@@ -28,9 +28,31 @@
   flex-grow: 1;
 }
 
-.title a {
-  color: #FF5D64FF;
-  text-decoration: none;
+.title {
+	background: linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	text-decoration: none;
+	background-clip: text;
+	font-size: 4em;
+  -webkit-text-fill-color: transparent;
+}
+
+.glitter {
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.glitter:hover {
+	background: linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -webkit-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -moz-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -ms-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	text-decoration: none;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	transition: all 0.3s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
 }
 
 .title a:hover,
@@ -56,11 +78,6 @@
   font-size: 1.5rem;
 }
 
-.description a:hover{
-	color: #FF5D64FF;
-	text-decoration: underline;
-	transition: 300ms;
-}
 
 .grid {
   display: flex;

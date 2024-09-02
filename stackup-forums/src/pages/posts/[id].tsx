@@ -10,6 +10,7 @@ import config from "../../wagmi";
 import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
 import Poll from "../../components/Poll";
+import styles from "../../styles/Custom.module.css";
 
 export interface PostIdParams extends ParsedUrlQuery {
 	id?: string;
@@ -18,14 +19,14 @@ export interface PostIdParams extends ParsedUrlQuery {
 export default function Post() {
 	const router = useRouter();
 	const { id: postId } = router.query as PostIdParams;
-	const [postDetails, setPostDetails] = useState<PostDetails>();
+	const [postDetails, setPostDetails] = useState<PostDetails | undefined>();
 
 	useEffect(() => {
-		if (!postId) {
+		if (postId === undefined) {
 			return;
 		}
 		const fetchDetails = async () => {
-			const postDetails: PostDetails | unknown | undefined = await readContract(
+			const postDetails: PostDetails | undefined | unknown = await readContract(
 				config,
 				{
 					address: deployedAddress,
@@ -45,16 +46,17 @@ export default function Post() {
 
 	return (
 		<>
-			{postDetails && (
-				<>
+			{postDetails?.id && (
+				<div className={styles.main}>
+					<h3>
+						<Link href="/forum">Go back to forum</Link>{" "}
+						<Link href={"/comments"}>See all comments</Link>
+					</h3>
 					<ShareablePostComponent post={postDetails} />
 					<Poll postId={postDetails.id} />
 					<CommentForm postId={postDetails.id} />
-					<Link href="/forum">Go back to forum.</Link>
-					<section title="comments-section">
-						<Comments post={postDetails} />
-					</section>
-				</>
+					<Comments post={postDetails} />
+				</div>
 			)}
 		</>
 	);

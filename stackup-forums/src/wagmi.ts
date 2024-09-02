@@ -36,15 +36,19 @@ const config = getDefaultConfig({
 	storage: createStorage({
 		storage: cookieStorage,
 	}),
-	chains: process.env.NEXT_PUBLIC_ONLY_ANVIL_HARDHAT_TESTNETS === "true" ? [anvil, hardhat] : [
-		mainnet,
-		polygon,
-		optimism,
-		arbitrum,
-		base,
-		...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
-			? [sepolia, arbitrumSepolia, anvil]
-			: [])],
+	chains:
+		process.env.NEXT_PUBLIC_ONLY_ANVIL_HARDHAT_TESTNETS === "true"
+			? [anvil, hardhat]
+			: [
+					mainnet,
+					polygon,
+					optimism,
+					arbitrum,
+					base,
+					...(process.env.NEXT_PUBLIC_ENABLE_TESTNETS === "true"
+						? [sepolia, arbitrumSepolia, anvil]
+						: []),
+				],
 	ssr: true,
 });
 

@@ -6,6 +6,8 @@ import { useReadContract } from "wagmi";
 import Posts from "../../components/Posts";
 import type { PostDetails } from "../../types/posts/types";
 import PostForm from "../../components/PostForm";
+import styles from "../../styles/Custom.module.css";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const Forum = () => {
 	const {
@@ -20,21 +22,24 @@ const Forum = () => {
 
 	useEffect(() => {
 		const fetchPosts = async () => {
-			const posts: PostDetails[] = [];
+			const posts: Promise<PostDetails | undefined>[] = [];
 			const binding = postIdIncrement as bigint;
 			// the first post was already initialised with 0x000000000
-			for (let i = 0; i < binding; i++) {
-				const post: PostDetails = (await readContract(config, {
+			for (let i = 1; i < binding; i++) {
+				const post: Promise<PostDetails | undefined> = readContract(config, {
 					abi: ABI,
 					address: deployedAddress,
 					functionName: "getPost",
 					args: [i],
 					account: getAccount(config).address,
-				})) as PostDetails;
+				}) as Promise<PostDetails | undefined>;
 
 				posts.push(post);
 			}
-			setPosts(posts);
+			Promise.all(posts).then((values) => {
+				const binding = values as PostDetails[];
+				setPosts(binding);
+			});
 		};
 		if (!isLoading) {
 			fetchPosts();
@@ -42,7 +47,12 @@ const Forum = () => {
 	}, [isLoading, postIdIncrement]);
 
 	return (
-		<div>
+		<div className={styles.main}>
+			<header>
+				<nav>
+					<ConnectButton />
+				</nav>
+			</header>
 			<div>
 				<PostForm />
 			</div>
