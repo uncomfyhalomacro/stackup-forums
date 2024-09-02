@@ -28,6 +28,7 @@ check: compile
 	forge coverage
 
 anvil:
-	anvil &
+	anvil & disown
+	sleep 3s;
 
 local-setup: anvil local-deploy

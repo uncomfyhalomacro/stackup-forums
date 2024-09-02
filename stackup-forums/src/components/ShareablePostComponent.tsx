@@ -1,7 +1,7 @@
 import Link from "next/link";
-import VotePostStubs from "./VotePostStubs";
 import type { PostDetails } from "../types/posts/types";
 import styles from "../styles/Custom.module.css";
+import CommonVoteStubs from "./CommonVoteStubs";
 
 const ShareablePostComponent = ({ post }: { post: PostDetails }) => {
 	return (
@@ -15,7 +15,14 @@ const ShareablePostComponent = ({ post }: { post: PostDetails }) => {
 			<div className={styles.description}>
 				<p>{post.description}</p>
 			</div>
-			<VotePostStubs postId={post.id} likes={post.likes} key={post.id} />
+			<CommonVoteStubs
+				key={post.id}
+				id={post.id}
+				likes={post.likes}
+				upVoteFn={"upVotePost"}
+				downVoteFn={"do"}
+				getFn={"getPost"}
+			/>
 		</article>
 	);
 };

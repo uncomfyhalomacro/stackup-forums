@@ -5,27 +5,36 @@ import {
 	writeContract,
 	waitForTransactionReceipt,
 	readContract,
-} from "wagmi/actions";
+} from "@wagmi/core";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
-import type { CommentDetails } from "../types/posts/types";
+import type { PostDetails, CommentDetails } from "../types/posts/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faLongArrowDown,
 	faLongArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 
-const VoteCommentStubs = ({
-	commentId,
+const CommonVoteStubs = ({
+	id,
 	likes,
-}: { commentId: bigint; likes: bigint }) => {
+	upVoteFn,
+	downVoteFn,
+	getFn,
+}: {
+	id: bigint;
+	likes: bigint;
+	upVoteFn: string;
+	downVoteFn: string;
+	getFn: string;
+}) => {
 	const [likeCounter, setLikeCounter] = useState(likes);
 
 	const handleUpvote = async () => {
 		const { result } = await simulateContract(config, {
 			address: deployedAddress,
 			abi: ABI,
-			functionName: "upVoteComment",
-			args: [commentId],
+			functionName: upVoteFn,
+			args: [id],
 		});
 
 		console.log(result);
@@ -33,8 +42,8 @@ const VoteCommentStubs = ({
 		const upvoteTxHash = await writeContract(config, {
 			address: deployedAddress,
 			abi: ABI,
-			functionName: "upVoteComment",
-			args: [commentId],
+			functionName: upVoteFn,
+			args: [id],
 		});
 
 		const transaction = await waitForTransactionReceipt(config, {
@@ -48,22 +57,25 @@ const VoteCommentStubs = ({
 			return;
 		}
 
-		const comment: CommentDetails = (await readContract(config, {
-			abi: ABI,
-			address: deployedAddress,
-			functionName: "getComment",
-			args: [commentId],
-		})) as CommentDetails;
+		const postOrComment: PostDetails | CommentDetails = (await readContract(
+			config,
+			{
+				abi: ABI,
+				address: deployedAddress,
+				functionName: getFn,
+				args: [id],
+			},
+		)) as PostDetails | CommentDetails;
 
-		setLikeCounter(comment.likes);
+		setLikeCounter(postOrComment.likes);
 	};
 
 	const handleDownVote = async () => {
 		const { result } = await simulateContract(config, {
 			address: deployedAddress,
 			abi: ABI,
-			functionName: "downVoteComment",
-			args: [commentId],
+			functionName: downVoteFn,
+			args: [id],
 		});
 
 		console.log(result);
@@ -71,8 +83,8 @@ const VoteCommentStubs = ({
 		const downvoteTxHash = await writeContract(config, {
 			address: deployedAddress,
 			abi: ABI,
-			functionName: "downVoteComment",
-			args: [commentId],
+			functionName: downVoteFn,
+			args: [id],
 		});
 
 		const transaction = await waitForTransactionReceipt(config, {
@@ -86,16 +98,18 @@ const VoteCommentStubs = ({
 			return;
 		}
 
-		const comment: CommentDetails = (await readContract(config, {
-			abi: ABI,
-			address: deployedAddress,
-			functionName: "getComment",
-			args: [commentId],
-		})) as CommentDetails;
+		const postOrComment: PostDetails | CommentDetails = (await readContract(
+			config,
+			{
+				abi: ABI,
+				address: deployedAddress,
+				functionName: getFn,
+				args: [id],
+			},
+		)) as PostDetails | CommentDetails;
 
-		setLikeCounter(comment.likes);
+		setLikeCounter(postOrComment.likes);
 	};
-
 	return (
 		<>
 			<div
@@ -114,4 +128,4 @@ const VoteCommentStubs = ({
 	);
 };
 
-export default VoteCommentStubs;
+export default CommonVoteStubs;
