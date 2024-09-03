@@ -56,19 +56,16 @@ const Comments = ({ post }: { post: PostDetails }) => {
 
 	return (
 		<>
-			{comments.length ? (
-				comments.map((comment) => (
-					<ShareableCommentComponent
-						comment={comment}
-						post={post}
-						key={comment.id}
-					/>
-				))
-			) : (
-				<div>Seems no one commented yet.</div>
-			)}
+			{comments.map((comment) => (
+				<ShareableCommentComponent
+					comment={comment}
+					post={post}
+					key={comment.id}
+				/>
+			))}
 		</>
 	);
 };
 
 export default Comments;
+
