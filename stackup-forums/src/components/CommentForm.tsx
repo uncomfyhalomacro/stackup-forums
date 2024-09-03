@@ -1,4 +1,4 @@
-import { useWriteContract } from "wagmi";
+import { useAccount, useWriteContract } from "wagmi";
 import type { CommentDetails } from "../types/posts/types";
 import { useEffect, useState } from "react";
 import { getAccount } from "@wagmi/core";
@@ -37,64 +37,73 @@ const CommentForm = ({ postId }: { postId: bigint }) => {
 
 	return (
 		<div className={styles.card}>
-			<form
-				className={styles.form}
-				onSubmit={(e) => {
-					e.preventDefault();
-					if (!comment.title.trim() || !comment.description.trim()) {
-						alert("Empty title or description not allowed.");
-						return;
-					}
-					writeContract({
-						abi: ABI,
-						address: deployedAddress,
-						functionName: "createComment",
-						args: [postId, comment.title, comment.description, comment.spoiler],
-					});
-				}}
-			>
-				<h1>Comment something wonderful!</h1>
-				<input
-					type="text"
-					name="comment-title"
-					placeholder="Comment title"
-					onChange={(e) => setComment({ ...comment, title: e.target.value })}
-					required
-				/>
-				<textarea
-					rows={5}
-					name="comment-description"
-					placeholder="What's on your mind?"
-					onChange={(e) =>
-						setComment({ ...comment, description: e.target.value })
-					}
-				/>
-				<div className={styles.secondary}>
-					<label htmlFor="spoiler">
-						<button
-							type="button"
-							onClick={() =>
-								setComment({ ...comment, spoiler: !comment.spoiler })
-							}
-						>
+			{useAccount().isConnected ? (
+				<form
+					className={styles.form}
+					onSubmit={(e) => {
+						e.preventDefault();
+						if (!comment.title.trim() || !comment.description.trim()) {
+							alert("Empty title or description not allowed.");
+							return;
+						}
+						writeContract({
+							abi: ABI,
+							address: deployedAddress,
+							functionName: "createComment",
+							args: [
+								postId,
+								comment.title,
+								comment.description,
+								comment.spoiler,
+							],
+						});
+					}}
+				>
+					<h1>Comment something wonderful!</h1>
+					<input
+						type="text"
+						name="comment-title"
+						placeholder="Comment title"
+						onChange={(e) => setComment({ ...comment, title: e.target.value })}
+						required
+					/>
+					<textarea
+						rows={5}
+						name="comment-description"
+						placeholder="What's on your mind?"
+						onChange={(e) =>
+							setComment({ ...comment, description: e.target.value })
+						}
+					/>
+					<div className={styles.secondary}>
+						<label htmlFor="spoiler">
+							<button
+								type="button"
+								onClick={() =>
+									setComment({ ...comment, spoiler: !comment.spoiler })
+								}
+							>
+								<FontAwesomeIcon
+									icon={faWarning}
+									color={!comment.spoiler ? "#359AECff" : "#FF5D64ff"}
+								/>{" "}
+								Spoiler
+							</button>
+						</label>
+						<button type="submit" className={styles.submit}>
 							<FontAwesomeIcon
-								icon={faWarning}
-								color={!comment.spoiler ? "#359AECff" : "#FF5D64ff"}
+								icon={faPencil}
+								color={!isPending ? "#359AECff" : "#FF5D64ff"}
 							/>{" "}
-							Spoiler
+							{isPending ? "Submitting..." : "Submit comment"}
 						</button>
-					</label>
-					<button type="submit" className={styles.submit}>
-						<FontAwesomeIcon
-							icon={faPencil}
-							color={!isPending ? "#359AECff" : "#FF5D64ff"}
-						/>{" "}
-						{isPending ? "Submitting..." : "Submit comment"}
-					</button>
-					{isSuccess && <p>Successfully commented</p>}
-					{isError && <p>Failed to comment on post</p>}
-				</div>
-			</form>
+						{isSuccess && <p>Successfully commented</p>}
+						{isError && <p>Failed to comment on post</p>}
+					</div>
+				</form>
+			) : (
+				<h3>You must sign in to comment</h3>
+			)}
 		</div>
 	);
 };

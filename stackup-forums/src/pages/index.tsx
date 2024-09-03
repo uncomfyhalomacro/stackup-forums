@@ -37,7 +37,17 @@ const Home: NextPage = () => (
 		</main>
 
 		<footer className={styles.footer}>
-			<p>Step into Arbitrum campaign, brought to you by <a href="https://stackup.dev" target="_blank" rel="noreferrer">StackUp</a> in partnership with <a href="https://arbitrum.io" rel="noreferrer" target="_blank">Arbitrum!</a> ❤️💙🧡</p>
+			<p>
+				Step into Arbitrum campaign, brought to you by{" "}
+				<a href="https://stackup.dev" target="_blank" rel="noreferrer">
+					StackUp
+				</a>{" "}
+				in partnership with{" "}
+				<a href="https://arbitrum.io" rel="noreferrer" target="_blank">
+					Arbitrum!
+				</a>{" "}
+				❤️💙🧡
+			</p>
 		</footer>
 	</div>
 );

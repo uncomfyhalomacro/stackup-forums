@@ -11,6 +11,7 @@ import Link from "next/link";
 import CommentForm from "../../components/CommentForm";
 import Poll from "../../components/Poll";
 import styles from "../../styles/Custom.module.css";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export interface PostIdParams extends ParsedUrlQuery {
 	id?: string;
@@ -48,6 +49,7 @@ export default function Post() {
 		<>
 			{postDetails?.id && (
 				<div className={styles.main}>
+					<ConnectButton />
 					<h3>
 						<Link href="/forum">Go back to forum</Link>{" "}
 						<Link href={"/comments"}>See all comments</Link>
