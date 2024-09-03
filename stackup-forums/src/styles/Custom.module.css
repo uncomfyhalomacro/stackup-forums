@@ -3,7 +3,7 @@
 	padding: 1rem;
 	text-align: left;
 	text-wrap: pretty;
-	word-break: normal;
+	word-break: break-word;
 	background: -moz-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
 background: -webkit-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
 background: linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
@@ -19,7 +19,7 @@ background: linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, 
 	padding: 1rem;
 	text-align: left;
 	text-wrap: pretty;
-	word-break: normal;
+	word-break: break-word;
 	background-color: #8d8d8d;
 	color: #FFFFFFdd;
 	text-decoration: none;
