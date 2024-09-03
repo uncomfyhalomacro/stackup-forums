@@ -14,7 +14,6 @@
 
 .footer {
   display: flex;
-  flex: 1;
   padding: 2rem 0;
   border-top: 1px solid #969696;
   justify-content: center;
@@ -22,10 +21,9 @@
 }
 
 .footer a {
-  display: flex;
+  display: inline;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
 }
 
 .title {

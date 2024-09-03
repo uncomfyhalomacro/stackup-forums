@@ -37,9 +37,7 @@ const Home: NextPage = () => (
 		</main>
 
 		<footer className={styles.footer}>
-			<a href="https://rainbow.me" rel="noopener noreferrer" target="_blank">
-				Made with ❤️ by your frens at 🌈
-			</a>
+			<p>Step into Arbitrum campaign, brought to you by <a href="https://stackup.dev" target="_blank" rel="noreferrer">StackUp</a> in partnership with <a href="https://arbitrum.io" rel="noreferrer" target="_blank">Arbitrum!</a> ❤️💙🧡</p>
 		</footer>
 	</div>
 );
