@@ -20,7 +20,7 @@ const ShareablePostComponent = ({ post }: { post: PostDetails }) => {
 				id={post.id}
 				likes={post.likes}
 				upVoteFn={"upVotePost"}
-				downVoteFn={"do"}
+				downVoteFn={"downVotePost"}
 				getFn={"getPost"}
 			/>
 		</article>
