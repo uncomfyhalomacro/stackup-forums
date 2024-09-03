@@ -16,13 +16,11 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@next/env": "14.2.7",
     "@rainbow-me/rainbowkit": "^2.1.5",
-    "@syncfusion/ej2-react-buttons": "26.2.10",
     "@tanstack/react-query": "5.53.1",
     "@wagmi/core": "^2.13.4",
     "next": "^14.2.3",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "toggle-switch": "0.0.2",
     "viem": "2.x",
     "wagmi": "2.12.8"
   },

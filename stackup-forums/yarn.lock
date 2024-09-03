@@ -895,41 +895,6 @@
     "@swc/counter" "^0.1.3"
     tslib "^2.4.0"
 
-"@syncfusion/ej2-base@~26.2.10":
-  version "26.2.10"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-base/-/ej2-base-26.2.10.tgz#49b7bb04416974d64bc3c2c3dd5915be93766545"
-  integrity sha512-i7TCvXGNsHmCoLA9AlHn3dIAyH8Bce6KCZUGshJS0EKu623SkVKjvWVWtgfar75/8SbTGWZQlGqEW5egYm3uTA==
-  dependencies:
-    "@syncfusion/ej2-icons" "~26.2.10"
-
-"@syncfusion/ej2-buttons@26.2.10":
-  version "26.2.10"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-buttons/-/ej2-buttons-26.2.10.tgz#4d10763e6e8844b29b0f90be93e262f2302656b6"
-  integrity sha512-WcErxTAI9r5PQQSOQNSWsaKfzYdSww+YeQaT4SO1xItMPDAEhWSqscnTMk46vDg6w5vRbAbB1US+3BAXJtOS1w==
-  dependencies:
-    "@syncfusion/ej2-base" "~26.2.10"
-
-"@syncfusion/ej2-icons@~26.2.10":
-  version "26.2.10"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-icons/-/ej2-icons-26.2.10.tgz#14bb63c70c363127f97792d757ad4de70c1405e6"
-  integrity sha512-ay+kr1oVqBOCe9MwJ0vjXS85CDAA5XwtwKb/Gf8cdz79IpsX/1VOvqOBofYu1+OPfbMX9w9mCLciNCMPCaRZFA==
-
-"@syncfusion/ej2-react-base@~26.2.10":
-  version "26.2.10"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-base/-/ej2-react-base-26.2.10.tgz#48922b08318c23efd60b82798f628c8d69cf0e38"
-  integrity sha512-h7N14nvada2JFvHYffsapq2ZeFrQEPn0wO79uLsp8aGknNynBgyYqFjQQrMntYzz7qj1OMqb675nvJamTkCgRQ==
-  dependencies:
-    "@syncfusion/ej2-base" "~26.2.10"
-
-"@syncfusion/ej2-react-buttons@26.2.10":
-  version "26.2.10"
-  resolved "https://registry.yarnpkg.com/@syncfusion/ej2-react-buttons/-/ej2-react-buttons-26.2.10.tgz#765b61460f1e803c1fbd8f89e9b593ef78b89a51"
-  integrity sha512-mgR2KM1jqYg+BqzZZ8pwyqiAgsHvYcv71GGoLc2KQlzIknJMCP0aZMWkqGD3efDq8iZqGmAOQj9X22YPp5Hngg==
-  dependencies:
-    "@syncfusion/ej2-base" "~26.2.10"
-    "@syncfusion/ej2-buttons" "26.2.10"
-    "@syncfusion/ej2-react-base" "~26.2.10"
-
 "@tanstack/query-core@5.53.1":
   version "5.53.1"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-5.53.1.tgz#864fa79ccba4cace939ee96f13218b924e50c785"
@@ -3401,11 +3366,6 @@ to-regex-range@^5.0.1:
   integrity sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==
   dependencies:
     is-number "^7.0.0"
-
-toggle-switch@0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/toggle-switch/-/toggle-switch-0.0.2.tgz#af6fdeafa25c0e763befa399c5e0532358129edc"
-  integrity sha512-nxMLnNSZXl/WJqTBEGnlfooqMdRR1i4SEOj9E+2UiVJHiquo767HT8phdW6kTioJ6cwCyx3/Pc9qGE8xWRnPwQ==
 
 tr46@~0.0.3:
   version "0.0.3"
