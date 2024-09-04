@@ -46,7 +46,7 @@ const Home: NextPage = () => (
 				<a href="https://arbitrum.io" rel="noreferrer" target="_blank">
 					Arbitrum!
 				</a>{" "}
-				❤️💙🧡
+				❤️🧡💙
 			</p>
 		</footer>
 	</div>

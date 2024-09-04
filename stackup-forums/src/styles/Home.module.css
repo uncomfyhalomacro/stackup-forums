@@ -37,16 +37,28 @@
 .glitter {
 	text-decoration: none;
 	font-weight: bold;
-}
-
-.glitter:hover {
-	background: linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
-	background: -webkit-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
-	background: -moz-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
-	background: -ms-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	text-shadow: rgb(243, 89, 89) 10px 0 20px, #17ACFFff -10px 0 10px;
+	background: content-box repeating-conic-gradient(#041828ff 0.0002% 0.00195%, #B24A4Aff 0.002% 0.0015%);
 	text-decoration: none;
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
+	/* transition: all 0.3s ease-in-out;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out; */
+}
+
+.glitter:hover {
+	/* background: linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -webkit-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -moz-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%);
+	background: -ms-linear-gradient(300deg, rgb(53, 154, 236) 15%, rgb(170, 179, 211) 38%, rgb(224, 76, 39) 91%); */
+	background: #041828ff;
+	text-decoration: none;
+	background-clip: text;
+	-moz-background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: #57A8F8ff;
 	transition: all 0.3s ease-in-out;
 	-webkit-transition: all 0.3s ease-in-out;
 	-moz-transition: all 0.3s ease-in-out;

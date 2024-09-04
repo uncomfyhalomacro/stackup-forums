@@ -30,9 +30,10 @@ background: -moz-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 
 background: -webkit-linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%);
 background: linear-gradient(90deg, rgba(10,20,45,1) 15%, rgba(39,57,123,1) 38%, rgba(233,116,87,1) 91%); */
 background: rgb(0,0,0);
-background: -moz-linear-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%);
-background: -webkit-linear-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%);
-background: linear-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%);
+/* background: -moz-repeating-conic-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%);
+background: -webkit-repeating-conic-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%);
+background: repeating-conic-gradient(293deg, rgba(0,0,0,1) 7%, rgba(101,101,101,1) 42%, rgba(8,9,9,1) 83%); */
+background: content-box repeating-conic-gradient(#041828ff 0.0002% 0.00195%, #B24A4Aff 0.002% 0.0015%);
 }
 
 a {
