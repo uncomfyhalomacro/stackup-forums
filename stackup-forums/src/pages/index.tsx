@@ -42,6 +42,7 @@ const Home: NextPage = () => (
 				<a href="https://stackup.dev" target="_blank" rel="noreferrer">
 					StackUp ❤️
 				</a>{" "}
+				❤️{" "}
 				in partnership with{" "}
 				<a href="https://arbitrum.io" rel="noreferrer" target="_blank">
 					Arbitrum!
