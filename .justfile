@@ -10,7 +10,6 @@ dev:
 	just stackup-forums/dev
 	
 start:
-	just stackup-forums/build
 	just stackup-forums/start
 
 format: check fix

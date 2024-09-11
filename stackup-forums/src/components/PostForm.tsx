@@ -17,9 +17,8 @@ import { faPencil, faPoll, faWarning } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Posts from "./Posts";
 import allPosts from "./allPosts";
-import { useAccount } from "wagmi";
 
-const PostForm = () => {
+const PostForm = ({ account }: { account: Address | undefined }) => {
 	// Add a blocker here if inputs are empty
 
 	const postInitialiser: PostDetails = {
@@ -101,7 +100,7 @@ const PostForm = () => {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "getPostsFromAddress",
-			args: [getAccount(config).address],
+			args: [account],
 		})) as bigint[];
 
 		// this won't affect the contract anyway
@@ -166,7 +165,7 @@ const PostForm = () => {
 
 	return (
 		<>
-			{useAccount().isConnected && (
+			{account !== undefined && (
 				<div className={styles.cardPlain}>
 					<div className={styles.home}>
 						<h3>
@@ -272,7 +271,7 @@ const PostForm = () => {
 				</div>
 			)}
 			<section>
-				<Posts posts={posts} />
+				<Posts account={account} posts={posts} />
 			</section>
 		</>
 	);
