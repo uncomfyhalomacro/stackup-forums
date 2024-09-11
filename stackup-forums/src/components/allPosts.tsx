@@ -18,7 +18,7 @@ const allPosts = async () => {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "getPost",
-			args: [Number(i)],
+			args: [i],
 		}) as Promise<PostDetails | undefined>;
 
 		posts.push(post);

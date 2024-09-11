@@ -14,7 +14,7 @@ const Comments = ({ post }: { post: PostDetails }) => {
 		abi: ABI,
 		address: deployedAddress,
 		functionName: "getCommentsFromPost",
-		args: [Number(post.id)],
+		args: [post.id],
 	});
 
 	const [comments, setComments] = useState<CommentDetails[]>([]);

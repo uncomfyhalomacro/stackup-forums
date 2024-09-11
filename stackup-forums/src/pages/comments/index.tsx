@@ -30,7 +30,7 @@ const AllComments = () => {
 					abi: ABI,
 					address: deployedAddress,
 					functionName: "getPost",
-					args: [Number(i)],
+					args: [i],
 					account: getAccount(config).address,
 				}) as Promise<PostDetails | undefined>;
 

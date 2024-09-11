@@ -21,7 +21,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "getPollFromPost",
-			args: [Number(postId)],
+			args: [postId],
 		})) as PollAllDetails | undefined;
 		if (newPoll !== undefined) {
 			setPollDetails(newPoll);
