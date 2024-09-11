@@ -1,5 +1,5 @@
 import type { PollFormDetails, PostDetails } from "../types/posts/types";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import {
 	getAccount,
 	readContract,
@@ -15,6 +15,9 @@ import styles from "../styles/Custom.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faPoll, faWarning } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
+import Posts from "./Posts";
+import allPosts from "./allPosts";
+import { useAccount } from "wagmi";
 
 const PostForm = () => {
 	// Add a blocker here if inputs are empty
@@ -28,6 +31,7 @@ const PostForm = () => {
 		likes: BigInt(0),
 		timestamp: BigInt(0),
 	};
+	const [posts, setPosts] = useState<PostDetails[]>([]);
 	const [post, setPost] = useState<PostDetails>(postInitialiser);
 	const [pollElementVisible, setPollElementVisible] = useState(false);
 	const [isLoading, setLoading] = useState(false);
@@ -146,111 +150,131 @@ const PostForm = () => {
 		setLoading(false);
 		setSuccess(true);
 		alert("Successfully submitted!");
-		window.location.reload();
+		setPollDetails(pollInitialiser);
+		setPost(postInitialiser);
 	};
 
-	return (
-		<div className={styles.cardPlain}>
-			<div className={styles.home}>
-				<h3>
-					<Link href="/">Go back to main page</Link>{" "}
-					<Link href={"/comments"}>See all comments</Link>
-				</h3>
-			</div>
-			<form
-				className={styles.form}
-				onSubmit={(e) => {
-					handlePostCreation(e);
-				}}
-			>
-				<input
-					type="text"
-					name="post-title"
-					value={post.title}
-					placeholder="Post title"
-					onChange={(e) => setPost({ ...post, title: e.target.value })}
-					required
-				/>
-				<textarea
-					rows={5}
-					name="post-description"
-					placeholder="What's on your mind?"
-					value={post.description}
-					onChange={(e) => setPost({ ...post, description: e.target.value })}
-				/>
-				{pollElementVisible && (
-					<>
-						<input
-							type="text"
-							name="poll-question"
-							placeholder="What's the poll about?"
-							value={pollDetails.question}
-							onChange={(e) =>
-								setPollDetails({ ...pollDetails, question: e.target.value })
-							}
-							required
-						/>
-						<input
-							type="text"
-							name="poll-option1"
-							placeholder="Option 1 Description"
-							value={pollDetails.option1}
-							onChange={(e) =>
-								setPollDetails({ ...pollDetails, option1: e.target.value })
-							}
-							required
-						/>
-						<input
-							type="text"
-							name="poll-option2"
-							placeholder="Option 2 Description"
-							value={pollDetails.option2}
-							onChange={(e) =>
-								setPollDetails({ ...pollDetails, option2: e.target.value })
-							}
-							required
-						/>
-					</>
-				)}
-				<div className={styles.bottomPrimary}>
-					<div className={styles.secondary}>
-						<label htmlFor="spoiler">
-							<button
-								type="button"
-								onClick={() => setPost({ ...post, spoiler: !post.spoiler })}
-							>
-								<FontAwesomeIcon
-									icon={faWarning}
-									color={!post.spoiler ? "#359AECff" : "#FF5D64ff"}
-								/>{" "}
-								Spoiler
-							</button>
-						</label>
-						<label htmlFor="hasPoll">
-							<button
-								type="button"
-								onClick={() => setPollElementVisible(!pollElementVisible)}
-							>
-								<FontAwesomeIcon
-									icon={faPoll}
-									color={!pollElementVisible ? "#359AECff" : "#FF5D64ff"}
-								/>{" "}
-								Poll
-							</button>
-						</label>
+	useEffect(() => {
+		const fetchPosts = async () => {
+			const posts = await allPosts();
+			setPosts(posts);
+		};
+		if (!isLoading) {
+			fetchPosts();
+		}
+	}, [isLoading]);
 
-						<button type="submit" className={styles.submit}>
-							<FontAwesomeIcon
-								icon={faPencil}
-								color={!isLoading ? "#359AECff" : "#FF5D64ff"}
-							/>{" "}
-							{isLoading ? "Submitting..." : "Submit post"}
-						</button>
+	return (
+		<>
+			{useAccount().isConnected && (
+				<div className={styles.cardPlain}>
+					<div className={styles.home}>
+						<h3>
+							<Link href="/">Go back to main page</Link>{" "}
+							<Link href={"/comments"}>See all comments</Link>
+						</h3>
 					</div>
+					<form
+						className={styles.form}
+						onSubmit={(e) => {
+							handlePostCreation(e);
+						}}
+					>
+						<input
+							type="text"
+							name="post-title"
+							value={post.title}
+							placeholder="Post title"
+							onChange={(e) => setPost({ ...post, title: e.target.value })}
+							required
+						/>
+						<textarea
+							rows={5}
+							name="post-description"
+							placeholder="What's on your mind?"
+							value={post.description}
+							onChange={(e) =>
+								setPost({ ...post, description: e.target.value })
+							}
+						/>
+						{pollElementVisible && (
+							<>
+								<input
+									type="text"
+									name="poll-question"
+									placeholder="What's the poll about?"
+									value={pollDetails.question}
+									onChange={(e) =>
+										setPollDetails({ ...pollDetails, question: e.target.value })
+									}
+									required
+								/>
+								<input
+									type="text"
+									name="poll-option1"
+									placeholder="Option 1 Description"
+									value={pollDetails.option1}
+									onChange={(e) =>
+										setPollDetails({ ...pollDetails, option1: e.target.value })
+									}
+									required
+								/>
+								<input
+									type="text"
+									name="poll-option2"
+									placeholder="Option 2 Description"
+									value={pollDetails.option2}
+									onChange={(e) =>
+										setPollDetails({ ...pollDetails, option2: e.target.value })
+									}
+									required
+								/>
+							</>
+						)}
+						<div className={styles.bottomPrimary}>
+							<div className={styles.secondary}>
+								<label htmlFor="spoiler">
+									<button
+										type="button"
+										onClick={() => setPost({ ...post, spoiler: !post.spoiler })}
+									>
+										<FontAwesomeIcon
+											icon={faWarning}
+											color={!post.spoiler ? "#359AECff" : "#FF5D64ff"}
+										/>{" "}
+										Spoiler
+									</button>
+								</label>
+								<label htmlFor="hasPoll">
+									<button
+										type="button"
+										onClick={() => setPollElementVisible(!pollElementVisible)}
+									>
+										<FontAwesomeIcon
+											icon={faPoll}
+											color={!pollElementVisible ? "#359AECff" : "#FF5D64ff"}
+										/>{" "}
+										Poll
+									</button>
+								</label>
+
+								<button type="submit" className={styles.submit}>
+									<FontAwesomeIcon
+										icon={faPencil}
+										color={!isLoading ? "#359AECff" : "#FF5D64ff"}
+									/>{" "}
+									{isLoading ? "Submitting..." : "Submit post"}
+								</button>
+							</div>
+						</div>
+						{isSuccess && <p>Successfully submitted</p>}
+					</form>
 				</div>
-				{isSuccess && <p>Successfully submitted</p>}
-			</form>
-		</div>
+			)}
+			<section>
+				<Posts posts={posts} />
+			</section>
+		</>
 	);
 };
 

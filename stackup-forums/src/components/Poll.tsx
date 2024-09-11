@@ -1,50 +1,48 @@
-import { useReadContract, useWriteContract } from "wagmi";
+import { useWriteContract } from "wagmi";
 import type { PollAllDetails } from "../types/posts/types";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";
 import { useEffect, useState } from "react";
 import styles from "../styles/Custom.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLeftRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUpLong } from "@fortawesome/free-solid-svg-icons";
+import { readContract } from "@wagmi/core";
+import config from "../wagmi";
 
 const Poll = ({ postId }: { postId: bigint }) => {
-	const {
-		data: poll,
-		isLoading,
-	}: { data: PollAllDetails | undefined; isLoading: boolean } = useReadContract(
-		{
+	const [pollDetails, setPollDetails] = useState<PollAllDetails | undefined>();
+
+	const { writeContract: votingOption1, isPending: isPendingOption1 } =
+		useWriteContract();
+	const { writeContract: votingOption2, isPending: isPendingOption2 } =
+		useWriteContract();
+
+	const fetchUpdatedPoll = async () => {
+		const newPoll = (await readContract(config, {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "getPollFromPost",
 			args: [Number(postId)],
-		},
-	);
+		})) as PollAllDetails | undefined;
+		if (newPoll !== undefined) {
+			setPollDetails(newPoll);
+		}
+	};
 
-	console.log(poll);
-	const [pollDetails, setPollDetails] = useState<PollAllDetails | undefined>();
-
-	const {
-		writeContract: votingOption1,
-		isPending: isPendingOption1,
-		isSuccess: isSuccess1,
-	} = useWriteContract();
-	const {
-		writeContract: votingOption2,
-		isPending: isPendingOption2,
-		isSuccess: isSuccess2,
-	} = useWriteContract();
-
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Lint is wrong. This causes an infinite useEffect loop
 	useEffect(() => {
-		if (!isLoading) {
-			if (poll === undefined) {
-				return;
-			}
-			setPollDetails(poll);
+		if (!isPendingOption1) {
+			fetchUpdatedPoll();
+			console.log("Updating???");
 		}
-		if (isSuccess1 || isSuccess2) {
-			alert("Successfully submitted your vote!");
-			window.location.reload();
+	}, [isPendingOption1]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Lint is wrong. This causes an infinite useEffect loop
+	useEffect(() => {
+		if (!isPendingOption2) {
+			fetchUpdatedPoll();
+			console.log("Updating???");
 		}
-	}, [isLoading, isSuccess1, isSuccess2, poll]);
+	}, [isPendingOption2]);
 
 	return (
 		<>
@@ -52,12 +50,6 @@ const Poll = ({ postId }: { postId: bigint }) => {
 				<div className={styles.card}>
 					<div className={styles.form}>
 						<h1>Here is the poll: {pollDetails?.question}</h1>
-						{isSuccess1 && (
-							<h2>Successfully voted on {pollDetails?.option1}</h2>
-						)}
-						{isSuccess2 && (
-							<h2>Successfully voted on {pollDetails?.option2}</h2>
-						)}
 						<button
 							className={styles.pollButton}
 							type="button"
@@ -70,12 +62,15 @@ const Poll = ({ postId }: { postId: bigint }) => {
 								});
 							}}
 						>
-							{pollDetails?.option1}{" "}
 							{isPendingOption1 ? (
-								"Voting..."
+								<>Voting... {pollDetails?.option1}</>
 							) : (
-								<FontAwesomeIcon icon={faLeftRight} />
-							)}{" "}
+								<>
+									<FontAwesomeIcon icon={faArrowUpLong} />{" "}
+									{pollDetails?.option1}
+								</>
+							)}
+							{": "}
 							{pollDetails?.option1Counter.toString()}
 						</button>
 						<button
@@ -90,12 +85,15 @@ const Poll = ({ postId }: { postId: bigint }) => {
 								});
 							}}
 						>
-							{pollDetails?.option2}{" "}
 							{isPendingOption2 ? (
-								"Voting..."
+								<>Voting... {pollDetails?.option2}</>
 							) : (
-								<FontAwesomeIcon icon={faLeftRight} />
-							)}{" "}
+								<>
+									<FontAwesomeIcon icon={faArrowUpLong} />{" "}
+									{pollDetails?.option2}
+								</>
+							)}
+							{": "}
 							{pollDetails?.option2Counter.toString()}
 						</button>
 					</div>

@@ -68,4 +68,3 @@ const Comments = ({ post }: { post: PostDetails }) => {
 };
 
 export default Comments;
-
