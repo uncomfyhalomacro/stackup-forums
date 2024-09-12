@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
 	"generate-typed-abi": "wagmi generate",
-    "build": "yarn generate-typed-abi && next build",
+    "build": "next build",
     "start": "next start",
     "format": "biome format --write",
     "lint": "biome lint --verbose",
