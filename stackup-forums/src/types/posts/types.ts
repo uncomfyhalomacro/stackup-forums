@@ -1,11 +1,33 @@
-import type { Address } from "viem";
+export type writeContractFn = Readonly<
+	| "createComment"
+	| "createPoll"
+	| "createPost"
+	| "downVoteComment"
+	| "downVotePost"
+	| "upVoteComment"
+	| "upVotePollOption"
+	| "upVotePost"
+>;
+
+export type readContractFn = Readonly<
+	| "commentIdIncrement"
+	| "comments"
+	| "compareStringsbyBytes"
+	| "getComment"
+	| "getCommentsFromPost"
+	| "getPoll"
+	| "getPollFromPost"
+	| "getPost"
+	| "getPostsFromAddress"
+	| "pollIdIncrement"
+>;
 
 export type PostDetails = {
-	owner: Address;
+	owner: `0x${string}`;
 	id: bigint;
 	title: string;
 	description: string;
-	spoiler: boolean;
+	spoil: boolean;
 	likes: bigint;
 	timestamp: bigint;
 };

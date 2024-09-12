@@ -1,4 +1,3 @@
-import { useReadContract } from "wagmi";
 import { ABI, deployedAddress } from "../../contracts/deployed-contract";
 import { useEffect, useState } from "react";
 import type { PostDetails } from "../../types/posts/types";
@@ -7,17 +6,19 @@ import { getAccount, readContract } from "@wagmi/core";
 import config from "../../wagmi";
 import Comments from "../../components/Comments";
 import Link from "next/link";
+import { useReadForumPostIdIncrement } from "../../contracts/generated";
 
 const AllComments = () => {
 	const {
 		isLoading,
 		data: postIdIncrement,
-	}: { isLoading: boolean; data: bigint | undefined } = useReadContract({
-		abi: ABI,
-		address: deployedAddress,
-		functionName: "postIdIncrement",
-	});
-	const [posts, setPosts] = useState<PostDetails[]>([]);
+	}: { isLoading: boolean; data: bigint | undefined } =
+		useReadForumPostIdIncrement({
+			address: deployedAddress,
+			args: [],
+		});
+	const [posts, setPosts] = useState<Array<PostDetails | undefined>>([]);
+
 	useEffect(() => {
 		if (postIdIncrement === undefined) {
 			return;
@@ -26,25 +27,26 @@ const AllComments = () => {
 			const posts: Promise<PostDetails | undefined>[] = [];
 			// the first post was already initialised with 0x000000000
 			for (let i = 1; i < postIdIncrement; i++) {
-				const post: Promise<PostDetails | undefined> = readContract(config, {
+				const post = readContract(config, {
 					abi: ABI,
 					address: deployedAddress,
 					functionName: "getPost",
-					args: [i],
+					args: [BigInt(i)],
 					account: getAccount(config).address,
-				}) as Promise<PostDetails | undefined>;
+				});
 
 				posts.push(post);
 			}
 			Promise.all(posts).then((values) => {
-				const binding = values.filter((post): post is PostDetails => !!post);
-				setPosts(binding);
+				setPosts(values);
 			});
 		};
 		if (!isLoading) {
 			fetchPosts();
 		}
 	}, [isLoading, postIdIncrement]);
+
+	if (posts === undefined) return <div>Loading comments...</div>;
 
 	return (
 		<div className={styles.main}>
@@ -54,9 +56,8 @@ const AllComments = () => {
 						<Link href="/forum">Go back to forum</Link>
 					</h3>
 					{posts.map((post) => (
-						<>
-							<Comments key={post.id} post={post} />
-						</>
+						// biome-ignore lint/correctness/useJsxKeyInIterable: bogus
+						<>{post !== undefined && <Comments key={post?.id} post={post} />}</>
 					))}
 				</>
 			) : (

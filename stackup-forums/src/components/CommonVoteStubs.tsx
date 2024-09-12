@@ -7,7 +7,12 @@ import {
 	readContract,
 } from "@wagmi/core";
 import { deployedAddress, ABI } from "../contracts/deployed-contract";
-import type { PostDetails, CommentDetails } from "../types/posts/types";
+import type {
+	PostDetails,
+	CommentDetails,
+	writeContractFn,
+	readContractFn,
+} from "../types/posts/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faLongArrowDown,
@@ -24,9 +29,9 @@ const CommonVoteStubs = ({
 }: {
 	id: bigint;
 	likes: bigint;
-	upVoteFn: string;
-	downVoteFn: string;
-	getFn: string;
+	upVoteFn: writeContractFn;
+	downVoteFn: writeContractFn;
+	getFn: readContractFn;
 }) => {
 	const [likeCounter, setLikeCounter] = useState(likes);
 
@@ -43,7 +48,7 @@ const CommonVoteStubs = ({
 		const upvoteTxHash = await writeContract(config, {
 			address: deployedAddress,
 			abi: ABI,
-			functionName: upVoteFn,
+			functionName: upVoteFn as writeContractFn,
 			args: [id],
 		});
 

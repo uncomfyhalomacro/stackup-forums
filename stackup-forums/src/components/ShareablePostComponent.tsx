@@ -6,7 +6,12 @@ import CommonVoteStubs from "./CommonVoteStubs";
 const ShareablePostComponent = ({ post }: { post: PostDetails }) => {
 	return (
 		<article key={post.id} className={styles.card}>
-			<Link href={`/posts/${encodeURIComponent(post.id.toString())}`}>
+			<Link
+				href={{
+					pathname: "/posts/[id]",
+					query: { id: post.id.toString() },
+				}}
+			>
 				<h2>{post.title}</h2>
 			</Link>
 			<h3>

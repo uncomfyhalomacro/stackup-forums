@@ -1,12 +1,6 @@
 import type { PollFormDetails, PostDetails } from "../types/posts/types";
 import { type FormEvent, useEffect, useState } from "react";
-import {
-	getAccount,
-	readContract,
-	simulateContract,
-	waitForTransactionReceipt,
-	writeContract,
-} from "@wagmi/core";
+import { readContract, simulateContract } from "@wagmi/core";
 import config from "../wagmi";
 import type { Address } from "viem";
 import { ABI, deployedAddress } from "../contracts/deployed-contract";
@@ -17,24 +11,41 @@ import { faPencil, faPoll, faWarning } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import Posts from "./Posts";
 import allPosts from "./allPosts";
+import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 const PostForm = ({ account }: { account: Address | undefined }) => {
-	// Add a blocker here if inputs are empty
-
+	if (account === undefined) return <div>Account not connected.</div>;
 	const postInitialiser: PostDetails = {
 		id: BigInt(0),
 		title: "",
-		owner: getAccount(config).address as Address,
+		owner: account,
 		description: "",
-		spoiler: false,
+		spoil: false,
 		likes: BigInt(0),
 		timestamp: BigInt(0),
 	};
+
+	const { data: postTxHash, writeContractAsync: submitPost } =
+		useWriteContract();
+	const { data: pollTxHash, writeContractAsync: submitPoll } =
+		useWriteContract();
+	const {
+		isSuccess: isPostSubmitted,
+		isLoading: isPostSubmitting,
+		isError: isPostSubmitError,
+	} = useWaitForTransactionReceipt({
+		hash: postTxHash,
+	});
+	const {
+		isSuccess: isPollSubmitted,
+		isLoading: isPollSubmitting,
+		isError: isPollSubmitError,
+	} = useWaitForTransactionReceipt({
+		hash: pollTxHash,
+	});
 	const [posts, setPosts] = useState<PostDetails[]>([]);
 	const [post, setPost] = useState<PostDetails>(postInitialiser);
 	const [pollElementVisible, setPollElementVisible] = useState(false);
-	const [isLoading, setLoading] = useState(false);
-	const [isSuccess, setSuccess] = useState(false);
 
 	const pollInitialiser: PollFormDetails = {
 		question: "",
@@ -46,7 +57,6 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 
 	const handlePostCreation = async (e: FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
 		// Block if poll first is visible but one or more details are empty
 		if (pollElementVisible) {
 			if (
@@ -57,60 +67,70 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 				alert(
 					"One or more of your poll details are empty. Consider checking your inputs.",
 				);
-				setLoading(false);
 				return;
 			}
 			if (pollDetails.option1.trim() === pollDetails.option2.trim()) {
 				alert("Option 1 and 2 are the same. Consider checking your inputs.");
-				setLoading(false);
 				return;
 			}
 		}
 		// Block post submission if either post title or description is empty
 		if (!post.description.trim() || !post.title.trim()) {
 			alert("Title or description not allowed to be empty...");
-			setLoading(false);
 			return;
 		}
 
-		const result = await simulateContract(config, {
+		await simulateContract(config, {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "createPost",
-			args: [post.title, post.description, post.spoiler],
+			args: [post.title, post.description, post.spoil],
+		}).catch((err) => {
+			console.error("Simulation failed with ", err);
 		});
-		console.log(result);
-		const postTxHash = await writeContract(config, {
+
+		await submitPost({
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "createPost",
-			args: [post.title, post.description, post.spoiler],
+			args: [post.title, post.description, post.spoil],
 		});
 
-		const transaction = await waitForTransactionReceipt(config, {
-			hash: postTxHash,
-		});
-
-		if (transaction.status === "reverted") {
-			alert("Creating post failed! Transaction was reverted due to an error!");
+		if (isPostSubmitError) {
+			alert("Creating post failed!");
 			return redirect(".");
 		}
 
-		const readUserPosts: bigint[] = (await readContract(config, {
+		if (isPollSubmitted) alert("Post submitted");
+
+		const readUserPosts = await readContract(config, {
 			abi: ABI,
 			address: deployedAddress,
 			functionName: "getPostsFromAddress",
 			args: [account],
-		})) as bigint[];
+		});
 
-		// this won't affect the contract anyway
-		const latestPostId = readUserPosts.pop();
+		const latestPostId = readUserPosts[readUserPosts.length - 1];
 
-		if (pollElementVisible && latestPostId !== undefined) {
+		if (pollElementVisible) {
 			alert(
 				"You created a poll. You have to sign another transaction again 🙏",
 			);
-			const result = await simulateContract(config, {
+			await simulateContract(config, {
+				abi: ABI,
+				address: deployedAddress,
+				functionName: "createPoll",
+				args: [
+					latestPostId,
+					pollDetails.question.trim(),
+					pollDetails.option1.trim(),
+					pollDetails.option2.trim(),
+				],
+			}).catch((err) => {
+				console.error("Simulation failed with ", err);
+			});
+
+			await submitPoll({
 				abi: ABI,
 				address: deployedAddress,
 				functionName: "createPoll",
@@ -122,33 +142,16 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 				],
 			});
 
-			const pollTxHash = await writeContract(config, {
-				abi: ABI,
-				address: deployedAddress,
-				functionName: "createPoll",
-				args: [
-					latestPostId,
-					pollDetails.question.trim(),
-					pollDetails.option1.trim(),
-					pollDetails.option2.trim(),
-				],
-			});
-
-			const transaction = await waitForTransactionReceipt(config, {
-				hash: pollTxHash,
-			});
-
-			if (transaction.status === "reverted") {
-				alert(
-					"Creating poll failed! Transaction was reverted due to an error!",
-				);
+			if (isPollSubmitError) {
+				alert("Creating poll failed!");
 				return;
 			}
+
+			if (isPollSubmitted) {
+				alert("Poll submitted");
+			}
 		}
-		console.log(result);
-		setLoading(false);
-		setSuccess(true);
-		alert("Successfully submitted!");
+		if (isPostSubmitted) alert("Post submission complete.");
 		setPollDetails(pollInitialiser);
 		setPost(postInitialiser);
 	};
@@ -158,10 +161,10 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 			const posts = await allPosts();
 			setPosts(posts);
 		};
-		if (!isLoading) {
+		if (!isPostSubmitting) {
 			fetchPosts();
 		}
-	}, [isLoading]);
+	}, [isPostSubmitting]);
 
 	return (
 		<>
@@ -235,11 +238,11 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 								<label htmlFor="spoiler">
 									<button
 										type="button"
-										onClick={() => setPost({ ...post, spoiler: !post.spoiler })}
+										onClick={() => setPost({ ...post, spoil: !post.spoil })}
 									>
 										<FontAwesomeIcon
 											icon={faWarning}
-											color={!post.spoiler ? "#359AECff" : "#FF5D64ff"}
+											color={!post.spoil ? "#359AECff" : "#FF5D64ff"}
 										/>{" "}
 										Spoiler
 									</button>
@@ -253,20 +256,19 @@ const PostForm = ({ account }: { account: Address | undefined }) => {
 											icon={faPoll}
 											color={!pollElementVisible ? "#359AECff" : "#FF5D64ff"}
 										/>{" "}
-										Poll
+										{isPollSubmitting ? "Generating poll..." : "Poll"}
 									</button>
 								</label>
 
 								<button type="submit" className={styles.submit}>
 									<FontAwesomeIcon
 										icon={faPencil}
-										color={!isLoading ? "#359AECff" : "#FF5D64ff"}
+										color={!isPostSubmitting ? "#359AECff" : "#FF5D64ff"}
 									/>{" "}
-									{isLoading ? "Submitting..." : "Submit post"}
+									{isPostSubmitting ? "Submitting..." : "Submit post"}
 								</button>
 							</div>
 						</div>
-						{isSuccess && <p>Successfully submitted</p>}
 					</form>
 				</div>
 			)}

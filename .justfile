@@ -1,10 +1,8 @@
 #!/usr/bin/just
 
-build: export-abi
+build:
+	just forum_dapp/compile
 	just stackup-forums/build
-
-export-abi:
-	just foundry/export-abi
 
 dev:
 	just stackup-forums/dev
@@ -13,23 +11,23 @@ start:
 	just stackup-forums/start
 
 format: check fix
-	just foundry/format
+	just forum_dapp/format
 	just stackup-forums/format
 
 deploy-contract:
-	just foundry/deploy-and-verify
+	just forum_dapp/deploy-and-verify
 
 contract:
-	just foundry/all
+	just forum_dapp/all
 
 check:
-	just foundry/check
+	just forum_dapp/check
 	just stackup-forums/lint
 
 fix:
 	just stackup-forums/fix
 
 _local-setup:
-	just foundry/local-setup
+	just forum_dapp/local-setup
 
 local-setup: _local-setup dev

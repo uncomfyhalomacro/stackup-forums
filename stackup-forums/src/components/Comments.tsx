@@ -24,18 +24,15 @@ const Comments = ({ post }: { post: PostDetails }) => {
 			return;
 		}
 		const fetchCommentsFromCommentIds = async () => {
-			const promised_comments: Promise<CommentDetails | undefined>[] = [];
+			const promised_comments: Promise<CommentDetails>[] = [];
 			const binding = postToCommentIds as bigint[];
 			for (const commentId of binding) {
-				const comment: Promise<CommentDetails | undefined> = readContract(
-					config,
-					{
-						abi: ABI,
-						address: deployedAddress,
-						functionName: "getComment",
-						args: [commentId],
-					},
-				) as Promise<CommentDetails | undefined>;
+				const comment = readContract(config, {
+					abi: ABI,
+					address: deployedAddress,
+					functionName: "getComment",
+					args: [commentId],
+				});
 
 				promised_comments.push(comment);
 			}
@@ -45,10 +42,7 @@ const Comments = ({ post }: { post: PostDetails }) => {
 		if (!isLoading) {
 			fetchCommentsFromCommentIds().then((promises) => {
 				Promise.all(promises).then((values) => {
-					const binding = values.filter(
-						(comment): comment is CommentDetails => !!comment,
-					);
-					setComments(binding);
+					setComments(values);
 				});
 			});
 		}

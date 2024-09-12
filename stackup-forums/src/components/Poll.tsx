@@ -1,48 +1,39 @@
-import { useWriteContract } from "wagmi";
-import type { PollAllDetails } from "../types/posts/types";
-import { ABI, deployedAddress } from "../contracts/deployed-contract";
-import { useEffect, useState } from "react";
+import { useWaitForTransactionReceipt } from "wagmi";
+import { deployedAddress } from "../contracts/deployed-contract";
 import styles from "../styles/Custom.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUpLong } from "@fortawesome/free-solid-svg-icons";
-import { readContract } from "@wagmi/core";
-import config from "../wagmi";
+import {
+	useReadForumGetPollFromPost,
+	useWriteForumUpVotePollOption,
+} from "../contracts/generated";
 
 const Poll = ({ postId }: { postId: bigint }) => {
-	const [pollDetails, setPollDetails] = useState<PollAllDetails | undefined>();
+	const { data: pollDetails } = useReadForumGetPollFromPost({
+		address: deployedAddress,
+		args: [postId],
+	});
 
-	const { writeContract: votingOption1, isPending: isPendingOption1 } =
-		useWriteContract();
-	const { writeContract: votingOption2, isPending: isPendingOption2 } =
-		useWriteContract();
+	let voteCounter1 = pollDetails?.option1Counter;
+	let voteCounter2 = pollDetails?.option2Counter;
 
-	const fetchUpdatedPoll = async () => {
-		const newPoll = (await readContract(config, {
-			abi: ABI,
-			address: deployedAddress,
-			functionName: "getPollFromPost",
-			args: [postId],
-		})) as PollAllDetails | undefined;
-		if (newPoll !== undefined) {
-			setPollDetails(newPoll);
-		}
-	};
+	const { data: option1TxHash, writeContractAsync: votingOption1 } =
+		useWriteForumUpVotePollOption();
+	const { data: option2TxHash, writeContractAsync: votingOption2 } =
+		useWriteForumUpVotePollOption();
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: Lint is wrong. This causes an infinite useEffect loop
-	useEffect(() => {
-		if (!isPendingOption1) {
-			fetchUpdatedPoll();
-			console.log("Updating???");
-		}
-	}, [isPendingOption1]);
+	const { isLoading: isVotingOption1, isSuccess: hasVotedOption1 } =
+		useWaitForTransactionReceipt({
+			hash: option1TxHash,
+		});
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: Lint is wrong. This causes an infinite useEffect loop
-	useEffect(() => {
-		if (!isPendingOption2) {
-			fetchUpdatedPoll();
-			console.log("Updating???");
-		}
-	}, [isPendingOption2]);
+	const { isLoading: isVotingOption2, isSuccess: hasVotedOption2 } =
+		useWaitForTransactionReceipt({
+			hash: option2TxHash,
+		});
+
+	if (hasVotedOption1 && voteCounter1 !== undefined) voteCounter1 += BigInt(1);
+	if (hasVotedOption2 && voteCounter2 !== undefined) voteCounter2 += BigInt(1);
 
 	return (
 		<>
@@ -55,14 +46,12 @@ const Poll = ({ postId }: { postId: bigint }) => {
 							type="button"
 							onClick={() => {
 								votingOption1({
-									abi: ABI,
 									address: deployedAddress,
-									functionName: "upVotePollOption",
 									args: [postId, pollDetails?.option1.trim()],
 								});
 							}}
 						>
-							{isPendingOption1 ? (
+							{isVotingOption1 ? (
 								<>Voting... {pollDetails?.option1}</>
 							) : (
 								<>
@@ -71,21 +60,19 @@ const Poll = ({ postId }: { postId: bigint }) => {
 								</>
 							)}
 							{": "}
-							{pollDetails?.option1Counter.toString()}
+							{voteCounter1?.toString()}
 						</button>
 						<button
 							className={styles.pollButton}
 							type="button"
 							onClick={() => {
 								votingOption2({
-									abi: ABI,
 									address: deployedAddress,
-									functionName: "upVotePollOption",
 									args: [postId, pollDetails?.option2.trim()],
 								});
 							}}
 						>
-							{isPendingOption2 ? (
+							{isVotingOption2 ? (
 								<>Voting... {pollDetails?.option2}</>
 							) : (
 								<>
@@ -94,7 +81,7 @@ const Poll = ({ postId }: { postId: bigint }) => {
 								</>
 							)}
 							{": "}
-							{pollDetails?.option2Counter.toString()}
+							{voteCounter2?.toString()}
 						</button>
 					</div>
 				</div>

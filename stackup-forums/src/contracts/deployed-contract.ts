@@ -1,8 +1,9 @@
-import contract from "./Forum.json";
 import type { Address } from "viem";
+import { forumAbi } from "./generated";
 
-const deployedAddress = process.env.NEXT_PUBLIC_DEPLOYED_CONTRACT_ADDRESS as Address;
+const deployedAddress = process.env
+	.NEXT_PUBLIC_DEPLOYED_CONTRACT_ADDRESS as Address;
 
 // Type inference correctly
-const ABI = [...contract.abi] as const;
+const ABI = forumAbi;
 export { ABI, deployedAddress };
